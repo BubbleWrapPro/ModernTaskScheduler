@@ -1,0 +1,92 @@
+<Page
+    x:Class="ModernTaskScheduler.Views.AboutWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <ScrollView>
+        <StackPanel Padding="32" Spacing="24">
+            <!-- Header with Icon -->
+            <StackPanel Spacing="16" HorizontalAlignment="Center">
+                <FontIcon Glyph="&#xE823;" FontSize="64" Foreground="{ThemeResource AccentFillColorDefaultBrush}" HorizontalAlignment="Center"/>
+                <StackPanel Spacing="8" HorizontalAlignment="Center">
+                    <TextBlock Text="Modern Task Scheduler" FontSize="28" FontWeight="Bold" TextAlignment="Center"/>
+                    <TextBlock Text="v1.0.0" FontSize="14" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextAlignment="Center"/>
+                </StackPanel>
+            </StackPanel>
+
+            <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
+
+            <!-- Description -->
+            <StackPanel Spacing="12">
+                <TextBlock Text="Description" FontSize="14" FontWeight="SemiBold"/>
+                <TextBlock Text="A modern, feature-rich Windows application for managing system tasks with an intuitive graphical interface built with WinUI and .NET 8." 
+                           TextWrapping="Wrap" 
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+            </StackPanel>
+
+            <!-- Features -->
+            <StackPanel Spacing="12">
+                <TextBlock Text="Features" FontSize="14" FontWeight="SemiBold"/>
+                <StackPanel Spacing="8">
+                    <TextBlock Text="✓ Browse and manage Windows scheduled tasks" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <TextBlock Text="✓ Create and modify tasks with full trigger/action support" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <TextBlock Text="✓ Organize tasks through folder hierarchy" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <TextBlock Text="✓ Real-time task monitoring and status updates" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <TextBlock Text="✓ Quick search and advanced filtering" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <TextBlock Text="✓ Task export to XML for backup" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                </StackPanel>
+            </StackPanel>
+
+            <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
+
+            <!-- Technical Information -->
+            <StackPanel Spacing="12">
+                <TextBlock Text="Technical Information" FontSize="14" FontWeight="SemiBold"/>
+                <Grid ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Framework:" FontWeight="SemiBold"/>
+                    <TextBlock Grid.Row="0" Grid.Column="1" Text=".NET 8"/>
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="UI Framework:" FontWeight="SemiBold"/>
+                    <TextBlock Grid.Row="1" Grid.Column="1" Text="WinUI 3 / Windows App SDK 2.5.1"/>
+
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Architecture:" FontWeight="SemiBold"/>
+                    <TextBlock Grid.Row="2" Grid.Column="1" Text="MVVM with MVVM Community Toolkit"/>
+
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Platform:" FontWeight="SemiBold"/>
+                    <TextBlock Grid.Row="3" Grid.Column="1" Text="Windows 10 (Build 19041) or later"/>
+                </Grid>
+            </StackPanel>
+
+            <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
+
+            <!-- Credits -->
+            <StackPanel Spacing="12">
+                <TextBlock Text="Credits" FontSize="14" FontWeight="SemiBold"/>
+                <TextBlock Text="Developed by: BubbleWrapPro" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                <TextBlock Text="Copyright © 2024 BubbleWrapPro. All rights reserved." Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+            </StackPanel>
+
+            <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
+
+            <!-- Links -->
+            <StackPanel Spacing="8" HorizontalAlignment="Center">
+                <HyperlinkButton Content="GitHub Repository" NavigateUri="https://github.com/BubbleWrapPro/ModernTaskScheduler" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </StackPanel>
+    </ScrollView>
+</Page>
