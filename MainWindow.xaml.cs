@@ -49,13 +49,13 @@ namespace ModernTaskScheduler
 
         private void ConfigureWindowSizeAndTitle()
         {
-            Title = "Planificateur de tâches Windows (Fluent)";
+            Title = "Modern Task Scheduler v1.0.0";
 
             WindowId windowId = Win32Interop.GetWindowIdFromWindow(_hwnd);
             AppWindow appWindow = AppWindow.GetFromWindowId(windowId);
             if (appWindow != null)
             {
-                appWindow.Resize(new Windows.Graphics.SizeInt32(1280, 820));
+                appWindow.Resize(new Windows.Graphics.SizeInt32(1400, 800));
             }
         }
 
@@ -225,6 +225,26 @@ namespace ModernTaskScheduler
         private void ToggleEnabled_Click(object sender, RoutedEventArgs e)
         {
             _ = ViewModel.ToggleEnabledSelectedTaskAsync();
+        }
+
+        private void AboutButton_Click(object sender, RoutedEventArgs e)
+        {
+            var aboutPage = new AboutWindow();
+            var aboutWindow = new Window
+            {
+                Title = "About Modern Task Scheduler",
+                Content = aboutPage
+            };
+
+            var hwnd = WindowNative.GetWindowHandle(aboutWindow);
+            var windowId = Win32Interop.GetWindowIdFromWindow(hwnd);
+            var appWindow = AppWindow.GetFromWindowId(windowId);
+            if (appWindow != null)
+            {
+                appWindow.Resize(new Windows.Graphics.SizeInt32(500, 700));
+            }
+
+            aboutWindow.Activate();
         }
     }
 }
