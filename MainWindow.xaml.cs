@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Microsoft.Win32.TaskScheduler;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,9 +24,32 @@ namespace ModernTaskScheduler
     /// </summary>
     public sealed partial class MainWindow : Window
     {
+        // 1. On déclare le TaskService au niveau de la classe
+        private TaskService ts = new TaskService();
+
         public MainWindow()
         {
-            InitializeComponent();
+            this.InitializeComponent();
+            LoadTasks();
+        }
+
+        private void LoadTasks()
+        {
+            // 2. On utilise la connexion qui est maintenant persistante
+            if (ts.Connected)
+            {
+                TaskListView.ItemsSource = ts.AllTasks;
+            }
+        }
+
+        private void TaskListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (TaskListView.SelectedItem is Task selectedTask)
+            {
+                TaskNameText.Text = selectedTask.Name;
+                TaskStateText.Text = $"État : {selectedTask.State}";
+                TaskNextRunText.Text = "Prochaine exécution : " + (selectedTask.NextRunTime == DateTime.MinValue ? "Aucune" : selectedTask.NextRunTime.ToString());
+            }
         }
     }
 }

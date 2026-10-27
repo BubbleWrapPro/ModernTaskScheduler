@@ -14,6 +14,26 @@
     </Window.SystemBackdrop>
 
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
 
+        <ListView x:Name="TaskListView" Grid.Column="0" SelectionChanged="TaskListView_SelectionChanged">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="0,5">
+                        <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="14"/>
+                        <TextBlock Text="{Binding State}" FontSize="12" Foreground="Gray"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <StackPanel x:Name="DetailsPanel" Grid.Column="1" Padding="20">
+            <TextBlock x:Name="TaskNameText" FontSize="24" FontWeight="Bold"/>
+            <TextBlock x:Name="TaskStateText" FontSize="16" Margin="0,10,0,0"/>
+            <TextBlock x:Name="TaskNextRunText" FontSize="16"/>
+        </StackPanel>
     </Grid>
 </Window>

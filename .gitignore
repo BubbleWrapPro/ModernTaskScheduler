@@ -1,1 +1,62 @@
+# Visual Studio / IDE
 .vs/
+.vscode/
+*.user
+*.suo
+*.sln.docstates
+
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+*.log
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+.nuget/packages/
+*.nuget.props
+*.nuget.targets
+
+# Visual Studio cache/options
+.vs/
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.vs/*
+!.vs/config/applicationhost.config
+
+# Rider
+.idea/
+*.sln.iml
+*.swp
+
+# ReSharper
+_ReSharper*/
+*.DotSettings.user
+
+# Local environment files
+.env
+.env.local
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# User-specific files
+*.VC.db
+*.opendb
+.vscode/
+launch.json
+settings.json
+
+# Test results
+TestResults/
+*.trx
+*.coverage
