@@ -4,11 +4,13 @@ using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using ModernTaskScheduler.Models;
 using ModernTaskScheduler.Services;
 using ModernTaskScheduler.ViewModels;
 using ModernTaskScheduler.Views;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
 using WinRT.Interop;
 
 namespace ModernTaskScheduler
@@ -227,24 +229,47 @@ namespace ModernTaskScheduler
             _ = ViewModel.ToggleEnabledSelectedTaskAsync();
         }
 
-        private void AboutButton_Click(object sender, RoutedEventArgs e)
+        private async void AboutButton_Click(object sender, RoutedEventArgs e)
         {
-            var aboutPage = new AboutWindow();
-            var aboutWindow = new Window
+            var stackPanel = new StackPanel
             {
-                Title = "About Modern Task Scheduler",
-                Content = aboutPage
+                Spacing = 16,
+                Padding = new Thickness(20)
             };
 
-            var hwnd = WindowNative.GetWindowHandle(aboutWindow);
-            var windowId = Win32Interop.GetWindowIdFromWindow(hwnd);
-            var appWindow = AppWindow.GetFromWindowId(windowId);
-            if (appWindow != null)
-            {
-                appWindow.Resize(new Windows.Graphics.SizeInt32(500, 700));
-            }
+            var titleBlock = new TextBlock 
+            { 
+                Text = "Modern Task Scheduler", 
+                FontSize = 20
+            };
+            stackPanel.Children.Add(titleBlock);
 
-            aboutWindow.Activate();
+            var versionBlock = new TextBlock { Text = "Version 1.0.0" };
+            stackPanel.Children.Add(versionBlock);
+
+            var descBlock = new TextBlock 
+            { 
+                Text = "A modern, feature-rich Windows application for managing system tasks built with WinUI and .NET 8.",
+                TextWrapping = TextWrapping.Wrap
+            };
+            stackPanel.Children.Add(descBlock);
+
+            var copyrightBlock = new TextBlock 
+            { 
+                Text = "© 2024 BubbleWrapPro. All rights reserved.",
+                FontSize = 12
+            };
+            stackPanel.Children.Add(copyrightBlock);
+
+            var dialog = new ContentDialog
+            {
+                Title = "About Modern Task Scheduler",
+                Content = stackPanel,
+                CloseButtonText = "Close",
+                XamlRoot = this.Content.XamlRoot
+            };
+
+            await dialog.ShowAsync();
         }
     }
 }
