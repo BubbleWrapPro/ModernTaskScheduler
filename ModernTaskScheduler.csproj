@@ -14,6 +14,19 @@
     <EnableMsixTooling>true</EnableMsixTooling>
     <Nullable>enable</Nullable>
     <NoWarn>$(NoWarn);MVVMTK0045;WMC1509</NoWarn>
+
+    <!-- Application Metadata -->
+    <AssemblyName>ModernTaskScheduler</AssemblyName>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Version>1.0.0</Version>
+    <Title>Modern Task Scheduler</Title>
+    <Product>Modern Task Scheduler</Product>
+    <Company>BubbleWrapPro</Company>
+    <Description>A modern, feature-rich Windows application for managing system tasks with an intuitive graphical interface built with WinUI and .NET 8.</Description>
+    <Copyright>Copyright © 2024 BubbleWrapPro. All rights reserved.</Copyright>
+    <Authors>BubbleWrapPro</Authors>
+    <InformationalVersion>1.0.0</InformationalVersion>
   </PropertyGroup>
 
   <ItemGroup>
