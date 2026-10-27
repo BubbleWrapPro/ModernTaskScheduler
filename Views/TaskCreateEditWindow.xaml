@@ -1,0 +1,496 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="ModernTaskScheduler.Views.TaskCreateEditWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:ModernTaskScheduler.ViewModels"
+    xmlns:models="using:ModernTaskScheduler.Models"
+    mc:Ignorable="d"
+    Title="Propriétés de la tâche">
+
+    <Window.SystemBackdrop>
+        <MicaBackdrop Kind="BaseAlt" />
+    </Window.SystemBackdrop>
+
+    <Grid RowSpacing="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- HEADER -->
+        <Border Grid.Row="0"
+                Background="{ThemeResource LayerFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="0,0,0,1"
+                Padding="24,14">
+            <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                <Border Width="40" Height="40" CornerRadius="20" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                    <FontIcon Glyph="&#xE823;" FontSize="18" Foreground="{ThemeResource AccentFillColorDefaultBrush}"/>
+                </Border>
+                <StackPanel VerticalAlignment="Center" Spacing="2">
+                    <TextBlock Text="{x:Bind ViewModel.DialogTitle, Mode=OneWay}"
+                               FontSize="18"
+                               FontWeight="SemiBold"/>
+                    <TextBlock Text="Configuration avancée selon les spécifications Windows Task Scheduler (100% options)"
+                               FontSize="12"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- ERROR INFOBAR -->
+        <InfoBar Grid.Row="1"
+                 Severity="Error"
+                 IsOpen="{x:Bind ViewModel.HasError, Mode=OneWay}"
+                 Title="Erreur de validation"
+                 Message="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}"
+                 IsClosable="False"/>
+
+        <!-- MAIN TABS CONTENT -->
+        <TabView Grid.Row="2"
+                 CanReorderTabs="False"
+                 IsAddTabButtonVisible="False"
+                 Padding="20,10">
+
+            <!-- ================= TAB 1: GÉNÉRAL ================= -->
+            <TabViewItem Header="Général" IsClosable="False">
+                <TabViewItem.IconSource>
+                    <FontIconSource Glyph="&#xE946;"/>
+                </TabViewItem.IconSource>
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12,16">
+                    <StackPanel Spacing="16" MaxWidth="850">
+                        <!-- Name & Folder -->
+                        <Grid ColumnSpacing="16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0"
+                                     Header="Nom de la tâche *"
+                                     PlaceholderText="Ex: NettoyageAutomatique"
+                                     Text="{x:Bind ViewModel.TaskName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <StackPanel Grid.Column="1" Spacing="6">
+                                <TextBlock Text="Dossier d'enregistrement" FontSize="12" FontWeight="SemiBold"/>
+                                <ComboBox HorizontalAlignment="Stretch"
+                                          ItemsSource="{x:Bind ViewModel.AvailableFolders, Mode=OneWay}"
+                                          SelectedValuePath="Path"
+                                          SelectedValue="{x:Bind ViewModel.FolderPath, Mode=TwoWay}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate x:DataType="models:TaskFolderItem">
+                                            <TextBlock Text="{x:Bind DisplayName}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Description -->
+                        <TextBox Header="Description de la tâche"
+                                 PlaceholderText="Décrivez l'objectif et les détails de cette tâche planifiée..."
+                                 TextWrapping="Wrap"
+                                 AcceptsReturn="True"
+                                 Height="80"
+                                 Text="{x:Bind ViewModel.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <!-- Author & User Account -->
+                        <Grid ColumnSpacing="16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0"
+                                     Header="Auteur"
+                                     Text="{x:Bind ViewModel.Author, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBox Grid.Column="1"
+                                     Header="Compte utilisateur exécutant"
+                                     PlaceholderText="Ex: SYSTEM ou NomUtilisateur"
+                                     Text="{x:Bind ViewModel.UserAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </Grid>
+
+                        <!-- Security & Elevation Options -->
+                        <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="16">
+                            <StackPanel Spacing="12">
+                                <TextBlock Text="Options de sécurité et droits d'exécution" FontWeight="SemiBold" FontSize="13"/>
+
+                                <CheckBox Content="Exécuter même si l'utilisateur n'est pas connecté"
+                                          IsChecked="{x:Bind ViewModel.RunWhetherUserLoggedOn, Mode=TwoWay}"/>
+
+                                <CheckBox Content="Ne pas stocker le mot de passe (la tâche n'accédera qu'aux ressources locales - S4U)"
+                                          Margin="24,0,0,0"
+                                          IsEnabled="{x:Bind ViewModel.RunWhetherUserLoggedOn, Mode=OneWay}"
+                                          IsChecked="{x:Bind ViewModel.DoNotStorePassword, Mode=TwoWay}"/>
+
+                                <CheckBox Content="Exécuter avec les autorisations maximales (Élévation Administrateur)"
+                                          IsChecked="{x:Bind ViewModel.IsHighestAvailable, Mode=TwoWay}"/>
+
+                                <CheckBox Content="Masquer la tâche (Invisible dans taskschd standard)"
+                                          IsChecked="{x:Bind ViewModel.Hidden, Mode=TwoWay}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Compatibility -->
+                        <ComboBox Header="Configurer pour :"
+                                  HorizontalAlignment="Stretch"
+                                  SelectedIndex="{x:Bind ViewModel.CompatibilityIndex, Mode=TwoWay}">
+                            <ComboBoxItem Content="Windows 10 / Windows 11 / Windows Server 2016 (V2.1)"/>
+                            <ComboBoxItem Content="Windows 7 / Windows Server 2008 R2 (V2.0)"/>
+                            <ComboBoxItem Content="Windows Vista / Windows Server 2008 (V1.0)"/>
+                        </ComboBox>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabViewItem>
+
+            <!-- ================= TAB 2: DÉCLENCHEURS ================= -->
+            <TabViewItem Header="Déclencheurs" IsClosable="False">
+                <TabViewItem.IconSource>
+                    <FontIconSource Glyph="&#xE823;"/>
+                </TabViewItem.IconSource>
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12,16">
+                    <StackPanel Spacing="16" MaxWidth="850">
+                        <ToggleSwitch Header="Activer ce déclencheur"
+                                      IsOn="{x:Bind ViewModel.TriggerEnabled, Mode=TwoWay}"
+                                      OnContent="Activé"
+                                      OffContent="Désactivé"/>
+
+                        <!-- Trigger Type -->
+                        <ComboBox Header="Lancer la tâche :"
+                                  HorizontalAlignment="Stretch"
+                                  SelectedIndex="{x:Bind ViewModel.TriggerTypeIndex, Mode=TwoWay}">
+                            <ComboBoxItem Content="Quotidien (Chaque jour)"/>
+                            <ComboBoxItem Content="Hebdomadaire (Chaque semaine)"/>
+                            <ComboBoxItem Content="Mensuel (Chaque mois)"/>
+                            <ComboBoxItem Content="À une heure programmée (Une seule fois)"/>
+                            <ComboBoxItem Content="À la connexion d'un utilisateur"/>
+                            <ComboBoxItem Content="Au démarrage de l'ordinateur"/>
+                            <ComboBoxItem Content="Sur inactivité de l'ordinateur"/>
+                            <ComboBoxItem Content="Au déverrouillage de la session"/>
+                        </ComboBox>
+
+                        <!-- Start Date & Time -->
+                        <StackPanel Orientation="Horizontal" Spacing="16">
+                            <DatePicker Header="Date de début"
+                                        Date="{x:Bind ViewModel.StartDate, Mode=TwoWay}"/>
+                            <TimePicker Header="Heure de début"
+                                        Time="{x:Bind ViewModel.StartTime, Mode=TwoWay}"/>
+                        </StackPanel>
+
+                        <!-- Advanced Trigger Options Card -->
+                        <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="16">
+                            <StackPanel Spacing="14">
+                                <TextBlock Text="Paramètres avancés du déclencheur" FontWeight="SemiBold" FontSize="13"/>
+
+                                <!-- Delay -->
+                                <Grid ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="Reporter la tâche jusqu'à :" VerticalAlignment="Center"/>
+                                    <ComboBox Grid.Column="1"
+                                              SelectedIndex="{x:Bind ViewModel.DelayIndex, Mode=TwoWay}">
+                                        <ComboBoxItem Content="Aucun délai"/>
+                                        <ComboBoxItem Content="30 secondes"/>
+                                        <ComboBoxItem Content="1 minute"/>
+                                        <ComboBoxItem Content="5 minutes"/>
+                                        <ComboBoxItem Content="15 minutes"/>
+                                        <ComboBoxItem Content="30 minutes"/>
+                                        <ComboBoxItem Content="1 heure"/>
+                                    </ComboBox>
+                                </Grid>
+
+                                <!-- Repetition -->
+                                <Grid ColumnSpacing="12" RowSpacing="8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0" Text="Répéter la tâche toutes les :" VerticalAlignment="Center"/>
+                                    <ComboBox Grid.Column="1"
+                                              SelectedIndex="{x:Bind ViewModel.RepeatIntervalIndex, Mode=TwoWay}">
+                                        <ComboBoxItem Content="Aucune répétition"/>
+                                        <ComboBoxItem Content="5 minutes"/>
+                                        <ComboBoxItem Content="10 minutes"/>
+                                        <ComboBoxItem Content="15 minutes"/>
+                                        <ComboBoxItem Content="30 minutes"/>
+                                        <ComboBoxItem Content="1 heure"/>
+                                    </ComboBox>
+
+                                    <TextBlock Grid.Column="2" Text="pendant une durée de :" VerticalAlignment="Center"/>
+                                    <ComboBox Grid.Column="3"
+                                              SelectedIndex="{x:Bind ViewModel.RepeatDurationIndex, Mode=TwoWay}">
+                                        <ComboBoxItem Content="1 heure"/>
+                                        <ComboBoxItem Content="4 heures"/>
+                                        <ComboBoxItem Content="12 heures"/>
+                                        <ComboBoxItem Content="1 jour"/>
+                                        <ComboBoxItem Content="3 jours"/>
+                                        <ComboBoxItem Content="Indéfiniment"/>
+                                    </ComboBox>
+                                </Grid>
+
+                                <CheckBox Content="Arrêter toutes les tâches en cours à la fin de la durée de répétition"
+                                          IsChecked="{x:Bind ViewModel.StopAtDurationEnd, Mode=TwoWay}"/>
+
+                                <!-- Trigger Execution Limit -->
+                                <Grid ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="Arrêter la tâche si elle s'exécute plus de :" VerticalAlignment="Center"/>
+                                    <ComboBox Grid.Column="1"
+                                              SelectedIndex="{x:Bind ViewModel.ExecutionLimitIndex, Mode=TwoWay}">
+                                        <ComboBoxItem Content="Pas de limite spécifique au déclencheur"/>
+                                        <ComboBoxItem Content="1 heure"/>
+                                        <ComboBoxItem Content="2 heures"/>
+                                        <ComboBoxItem Content="4 heures"/>
+                                        <ComboBoxItem Content="8 heures"/>
+                                        <ComboBoxItem Content="1 jour"/>
+                                        <ComboBoxItem Content="3 jours"/>
+                                    </ComboBox>
+                                </Grid>
+
+                                <!-- Expiration Date -->
+                                <StackPanel Spacing="8">
+                                    <CheckBox Content="Date d'expiration de la planification"
+                                              IsChecked="{x:Bind ViewModel.HasEndDate, Mode=TwoWay}"/>
+                                    <StackPanel Orientation="Horizontal" Spacing="16" Margin="24,0,0,0">
+                                        <DatePicker Header="Date de fin"
+                                                    IsEnabled="{x:Bind ViewModel.HasEndDate, Mode=OneWay}"
+                                                    Date="{x:Bind ViewModel.EndDate, Mode=TwoWay}"/>
+                                        <TimePicker Header="Heure de fin"
+                                                    IsEnabled="{x:Bind ViewModel.HasEndDate, Mode=OneWay}"
+                                                    Time="{x:Bind ViewModel.EndTime, Mode=TwoWay}"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabViewItem>
+
+            <!-- ================= TAB 3: ACTIONS ================= -->
+            <TabViewItem Header="Actions" IsClosable="False">
+                <TabViewItem.IconSource>
+                    <FontIconSource Glyph="&#xE756;"/>
+                </TabViewItem.IconSource>
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12,16">
+                    <StackPanel Spacing="16" MaxWidth="850">
+                        <TextBlock Text="Action : Démarrer un programme" FontWeight="SemiBold" FontSize="14"/>
+
+                        <!-- File Picker Grid -->
+                        <Grid ColumnSpacing="8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0"
+                                     Header="Programme / Script *"
+                                     PlaceholderText="Ex: C:\Windows\System32\cmd.exe ou C:\Scripts\backup.bat"
+                                     Text="{x:Bind ViewModel.ActionProgram, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Button Grid.Column="1"
+                                    VerticalAlignment="Bottom"
+                                    Click="BrowseFileButton_Click"
+                                    ToolTipService.ToolTip="Parcourir l'ordinateur...">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <FontIcon Glyph="&#xE838;"/>
+                                    <TextBlock Text="Parcourir..."/>
+                                </StackPanel>
+                            </Button>
+                        </Grid>
+
+                        <TextBox Header="Arguments facultatifs (paramètres de la commande)"
+                                 PlaceholderText="Ex: /c start script.bat ou -ExecutionPolicy Bypass -File C:\script.ps1"
+                                 Text="{x:Bind ViewModel.ActionArguments, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <TextBox Header="Dossier de démarrage (facultatif)"
+                                 PlaceholderText="Ex: C:\Scripts"
+                                 Text="{x:Bind ViewModel.ActionWorkingDirectory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabViewItem>
+
+            <!-- ================= TAB 4: CONDITIONS & PARAMÈTRES ================= -->
+            <TabViewItem Header="Conditions &amp; Paramètres" IsClosable="False">
+                <TabViewItem.IconSource>
+                    <FontIconSource Glyph="&#xE713;"/>
+                </TabViewItem.IconSource>
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12,16">
+                    <StackPanel Spacing="16" MaxWidth="850">
+
+                        <!-- IDLE CONDITIONS -->
+                        <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="16">
+                            <StackPanel Spacing="12">
+                                <TextBlock Text="Conditions d'inactivité de l'ordinateur" FontWeight="SemiBold" FontSize="13"/>
+
+                                <CheckBox Content="Démarrer la tâche seulement si l'ordinateur est inactif pendant 10 minutes"
+                                          IsChecked="{x:Bind ViewModel.RunOnlyIfIdle, Mode=TwoWay}"/>
+
+                                <StackPanel Spacing="8" Margin="24,0,0,0">
+                                    <CheckBox Content="Arrêter la tâche si l'ordinateur quitte l'état inactif"
+                                              IsEnabled="{x:Bind ViewModel.RunOnlyIfIdle, Mode=OneWay}"
+                                              IsChecked="{x:Bind ViewModel.StopOnIdleEnd, Mode=TwoWay}"/>
+                                    <CheckBox Content="Redémarrer la tâche si l'état inactif reprend"
+                                              IsEnabled="{x:Bind ViewModel.RunOnlyIfIdle, Mode=OneWay}"
+                                              IsChecked="{x:Bind ViewModel.RestartOnIdle, Mode=TwoWay}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- POWER CONDITIONS -->
+                        <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="16">
+                            <StackPanel Spacing="12">
+                                <TextBlock Text="Gestion de l'alimentation" FontWeight="SemiBold" FontSize="13"/>
+
+                                <CheckBox Content="Ne démarrer la tâche que si l'ordinateur est sur secteur"
+                                          IsChecked="{x:Bind ViewModel.DisallowStartIfOnBatteries, Mode=TwoWay}"/>
+
+                                <CheckBox Content="Arrêter si l'ordinateur bascule sur batterie"
+                                          IsChecked="{x:Bind ViewModel.StopIfGoingOnBatteries, Mode=TwoWay}"/>
+
+                                <CheckBox Content="Sortir l'ordinateur du mode veille pour exécuter la tâche"
+                                          IsChecked="{x:Bind ViewModel.WakeToRun, Mode=TwoWay}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- NETWORK CONDITIONS -->
+                        <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="16">
+                            <StackPanel Spacing="12">
+                                <TextBlock Text="Conditions réseau" FontWeight="SemiBold" FontSize="13"/>
+                                <CheckBox Content="Démarrer seulement si une connexion réseau est disponible"
+                                          IsChecked="{x:Bind ViewModel.RunOnlyIfNetworkAvailable, Mode=TwoWay}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- ADVANCED TASK SETTINGS -->
+                        <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="16">
+                            <StackPanel Spacing="12">
+                                <TextBlock Text="Paramètres avancés d'exécution de la tâche" FontWeight="SemiBold" FontSize="13"/>
+
+                                <CheckBox Content="Autoriser l'exécution de la tâche à la demande"
+                                          IsChecked="{x:Bind ViewModel.AllowDemandStart, Mode=TwoWay}"/>
+
+                                <CheckBox Content="Exécuter la tâche dès que possible après un démarrage manqué"
+                                          IsChecked="{x:Bind ViewModel.StartWhenAvailable, Mode=TwoWay}"/>
+
+                                <!-- Restart on failure -->
+                                <StackPanel Spacing="6">
+                                    <CheckBox Content="Si la tâche échoue, la redémarrer toutes les minutes (jusqu'à 3 tentatives)"
+                                              IsChecked="{x:Bind ViewModel.RestartOnFailure, Mode=TwoWay}"/>
+                                </StackPanel>
+
+                                <!-- Execution time limit -->
+                                <Grid ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="Arrêter la tâche si elle s'exécute plus de :" VerticalAlignment="Center"/>
+                                    <ComboBox Grid.Column="1"
+                                              SelectedIndex="{x:Bind ViewModel.ExecutionTimeLimitHoursIndex, Mode=TwoWay}">
+                                        <ComboBoxItem Content="Pas de limite (indéfini)"/>
+                                        <ComboBoxItem Content="1 heure"/>
+                                        <ComboBoxItem Content="2 heures"/>
+                                        <ComboBoxItem Content="4 heures"/>
+                                        <ComboBoxItem Content="8 heures"/>
+                                        <ComboBoxItem Content="1 jour (24h)"/>
+                                        <ComboBoxItem Content="3 jours (72h - recommandé)"/>
+                                    </ComboBox>
+                                </Grid>
+
+                                <CheckBox Content="Forcer l'arrêt de la tâche si elle ne s'arrête pas sur demande"
+                                          IsChecked="{x:Bind ViewModel.AllowHardTerminate, Mode=TwoWay}"/>
+
+                                <!-- Delete expired -->
+                                <Grid ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="Supprimer la tâche si non planifiée après :" VerticalAlignment="Center"/>
+                                    <ComboBox Grid.Column="1"
+                                              SelectedIndex="{x:Bind ViewModel.DeleteExpiredIndex, Mode=TwoWay}">
+                                        <ComboBoxItem Content="Ne jamais supprimer"/>
+                                        <ComboBoxItem Content="Immédiatement après expiration"/>
+                                        <ComboBoxItem Content="Après 30 jours"/>
+                                        <ComboBoxItem Content="Après 90 jours"/>
+                                        <ComboBoxItem Content="Après 180 jours"/>
+                                        <ComboBoxItem Content="Après 365 jours"/>
+                                    </ComboBox>
+                                </Grid>
+
+                                <!-- Multiple instances policy -->
+                                <ComboBox Header="Si la tâche est déjà en cours d'exécution, la règle suivante s'applique :"
+                                          HorizontalAlignment="Stretch"
+                                          SelectedIndex="{x:Bind ViewModel.MultipleInstancesIndex, Mode=TwoWay}">
+                                    <ComboBoxItem Content="Ne pas démarrer de nouvelle instance (Ignorer)"/>
+                                    <ComboBoxItem Content="Exécuter des instances en parallèle"/>
+                                    <ComboBoxItem Content="Mettre la nouvelle instance en file d'attente"/>
+                                    <ComboBoxItem Content="Arrêter l'instance existante"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </TabViewItem>
+
+        </TabView>
+
+        <!-- FOOTER: ACTIONS -->
+        <Border Grid.Row="3"
+                Background="{ThemeResource LayerFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="0,1,0,0"
+                Padding="24,14">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10">
+                    <Button Content="Annuler"
+                            Click="CancelButton_Click"
+                            Width="110"/>
+                    <Button Content="Enregistrer la tâche"
+                            Style="{ThemeResource AccentButtonStyle}"
+                            Click="SaveButton_Click"
+                            Width="160"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
