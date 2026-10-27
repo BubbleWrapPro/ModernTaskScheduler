@@ -10,13 +10,25 @@
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
             </ResourceDictionary.MergedDictionaries>
-            
+
             <!-- Global Converters -->
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <converters:BoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" Invert="True" />
             <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
             <converters:NullToVisibilityConverter x:Key="InverseNullToVisibilityConverter" Invert="True" />
             <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
+
+            <!-- Application Color Theme -->
+            <Color x:Key="PrimaryColor">#2E5090</Color>
+            <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}" />
+            <Color x:Key="AccentColor">#0078D4</Color>
+            <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}" />
+            <Color x:Key="SuccessColor">#107C10</Color>
+            <SolidColorBrush x:Key="SuccessBrush" Color="{StaticResource SuccessColor}" />
+            <Color x:Key="WarningColor">#FFB900</Color>
+            <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource WarningColor}" />
+            <Color x:Key="ErrorColor">#DA3B01</Color>
+            <SolidColorBrush x:Key="ErrorBrush" Color="{StaticResource ErrorColor}" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>
