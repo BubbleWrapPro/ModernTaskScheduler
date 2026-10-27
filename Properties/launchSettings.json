@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "ModernTaskScheduler (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "ModernTaskScheduler (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
