@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml.Controls;
 using TaskState = Microsoft.Win32.TaskScheduler.TaskState;
+using ModernTaskScheduler.Localization;
 using ModernTaskScheduler.Models;
 using ModernTaskScheduler.Services;
 
@@ -39,17 +40,17 @@ namespace ModernTaskScheduler.ViewModels
         private string _searchText = string.Empty;
 
         [ObservableProperty]
-        private string _selectedFilter = "Toutes";
+        private string _selectedFilter = "All";
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(LoadingVisibility))]
         private bool _isLoading = false;
 
         [ObservableProperty]
-        private string _loadingMessage = "Chargement des tâches...";
+        private string _loadingMessage = LocalizationService.Instance.Translate("Chargement des tâches...");
 
         [ObservableProperty]
-        private string _statusMessage = "Prêt";
+        private string _statusMessage = LocalizationService.Instance.Translate("Prêt");
 
         [ObservableProperty]
         private int _totalTasksCount;
@@ -109,7 +110,7 @@ namespace ModernTaskScheduler.ViewModels
         public async Task InitializeAsync()
         {
             IsLoading = true;
-            LoadingMessage = "Connexion au service du Planificateur de tâches...";
+            LoadingMessage = LocalizationService.Instance.Translate("Connexion au service du Planificateur de tâches...");
 
             try
             {
@@ -173,7 +174,7 @@ namespace ModernTaskScheduler.ViewModels
         public async Task RefreshAsync()
         {
             IsLoading = true;
-            LoadingMessage = "Actualisation des tâches et dossiers...";
+            LoadingMessage = LocalizationService.Instance.Translate("Actualisation des tâches et dossiers...");
 
             try
             {
@@ -195,13 +196,13 @@ namespace ModernTaskScheduler.ViewModels
         public async Task LoadAllTasksAsync()
         {
             IsLoading = true;
-            LoadingMessage = "Chargement de toutes les tâches de la bibliothèque...";
+            LoadingMessage = LocalizationService.Instance.Translate("Chargement de toutes les tâches de la bibliothèque...");
 
             try
             {
                 var tasks = await _taskService.GetAllTasksAsync();
                 UpdateTaskList(tasks);
-                StatusMessage = $"Toutes les tâches affichées ({tasks.Count} tâches chargées)";
+                StatusMessage = LocalizationService.Instance.Format("Toutes les tâches affichées ({0} tâches chargées)", "All tasks shown ({0} tasks loaded)", tasks.Count);
             }
             catch (Exception ex)
             {
@@ -216,13 +217,13 @@ namespace ModernTaskScheduler.ViewModels
         public async Task LoadTasksForFolderAsync(string folderPath)
         {
             IsLoading = true;
-            LoadingMessage = $"Chargement du dossier '{folderPath}'...";
+            LoadingMessage = LocalizationService.Instance.Format("Chargement du dossier '{0}'...", "Loading folder '{0}'...", folderPath);
 
             try
             {
                 var tasks = await _taskService.GetTasksInFolderAsync(folderPath);
                 UpdateTaskList(tasks);
-                StatusMessage = $"Dossier : {folderPath} ({tasks.Count} tâches)";
+                StatusMessage = LocalizationService.Instance.Format("Dossier : {0} ({1} tâches)", "Folder: {0} ({1} tasks)", folderPath, tasks.Count);
             }
             catch (Exception ex)
             {
@@ -258,15 +259,15 @@ namespace ModernTaskScheduler.ViewModels
 
             var result = _allLoadedTasks.AsEnumerable();
 
-            if (filter == "En cours")
+            if (filter == "Running")
             {
                 result = result.Where(t => t.State == TaskState.Running);
             }
-            else if (filter == "Prêtes")
+            else if (filter == "Ready")
             {
                 result = result.Where(t => t.State == TaskState.Ready);
             }
-            else if (filter == "Désactivées")
+            else if (filter == "Disabled")
             {
                 result = result.Where(t => t.State == TaskState.Disabled);
             }
@@ -317,7 +318,7 @@ namespace ModernTaskScheduler.ViewModels
                     await _taskService.CreateFolderAsync(parentPath, folderName.Trim());
                     string newPath = parentPath == @"\" ? $@"\{folderName.Trim()}" : $@"{parentPath}\{folderName.Trim()}";
                     await ReloadFoldersAsync(newPath);
-                    ShowNotification("Dossier créé", $"Le dossier '{folderName}' a été créé avec succès.", InfoBarSeverity.Success);
+                    ShowNotification("Dossier créé", LocalizationService.Instance.Format("Le dossier '{0}' a été créé avec succès.", "Folder '{0}' was created successfully.", folderName), InfoBarSeverity.Success);
                 }
                 catch (Exception ex)
                 {
@@ -339,7 +340,7 @@ namespace ModernTaskScheduler.ViewModels
                 {
                     await _taskService.DeleteFolderAsync(targetPath);
                     await ReloadFoldersAsync(@"\");
-                    ShowNotification("Dossier supprimé", $"Le dossier '{targetPath}' a été supprimé.", InfoBarSeverity.Success);
+                    ShowNotification("Dossier supprimé", LocalizationService.Instance.Format("Le dossier '{0}' a été supprimé.", "Folder '{0}' was deleted.", targetPath), InfoBarSeverity.Success);
                 }
                 catch (Exception ex)
                 {
@@ -361,7 +362,7 @@ namespace ModernTaskScheduler.ViewModels
             try
             {
                 await _taskService.RunTaskAsync(task.Path);
-                ShowNotification("Tâche exécutée", $"L'ordre d'exécution pour '{task.Name}' a été envoyé avec succès.", InfoBarSeverity.Success);
+                ShowNotification("Tâche exécutée", LocalizationService.Instance.Format("L'ordre d'exécution pour '{0}' a été envoyé avec succès.", "Run request for '{0}' was sent successfully.", task.Name), InfoBarSeverity.Success);
 
                 await Task.Delay(500);
                 await RefreshSingleTaskAsync(task);
@@ -387,7 +388,7 @@ namespace ModernTaskScheduler.ViewModels
             try
             {
                 await _taskService.StopTaskAsync(task.Path);
-                ShowNotification("Tâche arrêtée", $"L'ordre d'arrêt pour '{task.Name}' a été envoyé avec succès.", InfoBarSeverity.Informational);
+                ShowNotification("Tâche arrêtée", LocalizationService.Instance.Format("L'ordre d'arrêt pour '{0}' a été envoyé avec succès.", "Stop request for '{0}' was sent successfully.", task.Name), InfoBarSeverity.Informational);
 
                 await Task.Delay(500);
                 await RefreshSingleTaskAsync(task);
@@ -416,8 +417,13 @@ namespace ModernTaskScheduler.ViewModels
                 await _taskService.SetTaskEnabledAsync(task.Path, newEnabled);
                 task.Enabled = newEnabled;
 
-                string actionLabel = newEnabled ? "activée" : "désactivée";
-                ShowNotification("État modifié", $"La tâche '{task.Name}' est maintenant {actionLabel}.", InfoBarSeverity.Success);
+                ShowNotification("État modifié", LocalizationService.Instance.Format(
+                    "La tâche '{0}' est maintenant {1}.",
+                    "Task '{0}' is now {1}.",
+                    task.Name,
+                    newEnabled
+                        ? LocalizationService.Instance.Translate("activée")
+                        : LocalizationService.Instance.Translate("désactivée")), InfoBarSeverity.Success);
 
                 await RefreshSingleTaskAsync(task);
             }
@@ -454,7 +460,7 @@ namespace ModernTaskScheduler.ViewModels
                 SelectedTask = null;
 
                 UpdateCounts();
-                ShowNotification("Tâche supprimée", $"La tâche '{task.Name}' a été définitivement supprimée.", InfoBarSeverity.Success);
+                ShowNotification("Tâche supprimée", LocalizationService.Instance.Format("La tâche '{0}' a été définitivement supprimée.", "Task '{0}' was permanently deleted.", task.Name), InfoBarSeverity.Success);
             }
             catch (Exception ex)
             {
@@ -479,7 +485,7 @@ namespace ModernTaskScheduler.ViewModels
             bool success = await ShowCreateDialogAsync(model);
             if (success)
             {
-                ShowNotification("Tâche créée", $"La tâche '{model.TaskName}' a été créée et enregistrée avec succès.", InfoBarSeverity.Success);
+                ShowNotification("Tâche créée", LocalizationService.Instance.Format("La tâche '{0}' a été créée et enregistrée avec succès.", "Task '{0}' was created successfully.", model.TaskName), InfoBarSeverity.Success);
                 await LoadTasksForFolderAsync(SelectedFolder?.Path ?? @"\");
             }
         }
@@ -492,7 +498,7 @@ namespace ModernTaskScheduler.ViewModels
             bool success = await ShowEditDialogAsync(SelectedTask);
             if (success)
             {
-                ShowNotification("Tâche modifiée", $"La tâche '{SelectedTask.Name}' a été mise à jour avec succès.", InfoBarSeverity.Success);
+                ShowNotification("Tâche modifiée", LocalizationService.Instance.Format("La tâche '{0}' a été mise à jour avec succès.", "Task '{0}' was updated successfully.", SelectedTask.Name), InfoBarSeverity.Success);
                 await LoadTasksForFolderAsync(SelectedFolder?.Path ?? @"\");
             }
         }
@@ -508,7 +514,7 @@ namespace ModernTaskScheduler.ViewModels
                 if (!string.IsNullOrEmpty(xml) && CopyToClipboardAction != null)
                 {
                     CopyToClipboardAction(xml);
-                    ShowNotification("XML copié", "La définition XML a été copiée dans le presse-papiers.", InfoBarSeverity.Success);
+                    ShowNotification("XML copié", LocalizationService.Instance.Translate("La définition XML a été copiée dans le presse-papiers."), InfoBarSeverity.Success);
                 }
             }
             catch (Exception ex)
@@ -522,7 +528,7 @@ namespace ModernTaskScheduler.ViewModels
         {
             if (SelectedTask == null || string.IsNullOrEmpty(SelectedTask.XmlDefinition)) return;
             CopyToClipboardAction?.Invoke(SelectedTask.XmlDefinition);
-            ShowNotification("XML copié", "Le XML a été copié dans le presse-papiers.", InfoBarSeverity.Success);
+            ShowNotification("XML copié", LocalizationService.Instance.Translate("Le XML a été copié dans le presse-papiers."), InfoBarSeverity.Success);
         }
 
         private async Task RefreshSingleTaskAsync(TaskItemViewModel task)
@@ -588,8 +594,8 @@ namespace ModernTaskScheduler.ViewModels
         {
             _dispatcherQueue.TryEnqueue(() =>
             {
-                InfoBarTitle = title;
-                InfoBarMessage = message;
+                InfoBarTitle = LocalizationService.Instance.Translate(title);
+                InfoBarMessage = LocalizationService.Instance.Translate(message);
                 InfoBarSeverity = severity;
                 IsInfoBarOpen = true;
             });

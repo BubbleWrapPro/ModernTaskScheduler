@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using TaskScheduler = Microsoft.Win32.TaskScheduler;
+using ModernTaskScheduler.Localization;
 using ModernTaskScheduler.Models;
 using ModernTaskScheduler.ViewModels;
 
@@ -29,7 +30,7 @@ namespace ModernTaskScheduler.Services
 
                         string indent = depth > 0 ? new string(' ', (depth - 1) * 4) + "└─ " : string.Empty;
                         string display = depth == 0
-                            ? @"📁 \ (Bibliothèque du Planificateur)"
+                            ? LocalizationService.Instance.Translate(@"📁 \ (Bibliothèque du Planificateur)")
                             : $"{indent}📁 {name} ({count})";
 
                         list.Add(new TaskFolderItem
@@ -155,8 +156,8 @@ namespace ModernTaskScheduler.Services
             return StaTask.Run(() =>
             {
                 using var ts = new TaskScheduler.TaskService();
-                if (!ts.Connected) throw new InvalidOperationException("Service de planification non connecté.");
-                TaskScheduler.Task? task = ts.GetTask(taskPath) ?? throw new FileNotFoundException($"La tâche '{taskPath}' est introuvable.");
+                if (!ts.Connected) throw new InvalidOperationException(LocalizationService.Instance.Translate("Service de planification non connecté."));
+                TaskScheduler.Task? task = ts.GetTask(taskPath) ?? throw new FileNotFoundException(LocalizationService.Instance.Format("La tâche '{0}' est introuvable.", "Task '{0}' was not found.", taskPath));
                 task.Run();
             });
         }
@@ -166,8 +167,8 @@ namespace ModernTaskScheduler.Services
             return StaTask.Run(() =>
             {
                 using var ts = new TaskScheduler.TaskService();
-                if (!ts.Connected) throw new InvalidOperationException("Service de planification non connecté.");
-                TaskScheduler.Task? task = ts.GetTask(taskPath) ?? throw new FileNotFoundException($"La tâche '{taskPath}' est introuvable.");
+                if (!ts.Connected) throw new InvalidOperationException(LocalizationService.Instance.Translate("Service de planification non connecté."));
+                TaskScheduler.Task? task = ts.GetTask(taskPath) ?? throw new FileNotFoundException(LocalizationService.Instance.Format("La tâche '{0}' est introuvable.", "Task '{0}' was not found.", taskPath));
                 task.Stop();
             });
         }
@@ -177,8 +178,8 @@ namespace ModernTaskScheduler.Services
             return StaTask.Run(() =>
             {
                 using var ts = new TaskScheduler.TaskService();
-                if (!ts.Connected) throw new InvalidOperationException("Service de planification non connecté.");
-                TaskScheduler.Task? task = ts.GetTask(taskPath) ?? throw new FileNotFoundException($"La tâche '{taskPath}' est introuvable.");
+                if (!ts.Connected) throw new InvalidOperationException(LocalizationService.Instance.Translate("Service de planification non connecté."));
+                TaskScheduler.Task? task = ts.GetTask(taskPath) ?? throw new FileNotFoundException(LocalizationService.Instance.Format("La tâche '{0}' est introuvable.", "Task '{0}' was not found.", taskPath));
                 task.Enabled = enabled;
             });
         }
@@ -188,7 +189,7 @@ namespace ModernTaskScheduler.Services
             return StaTask.Run(() =>
             {
                 using var ts = new TaskScheduler.TaskService();
-                if (!ts.Connected) throw new InvalidOperationException("Service de planification non connecté.");
+                if (!ts.Connected) throw new InvalidOperationException(LocalizationService.Instance.Translate("Service de planification non connecté."));
 
                 int lastSlash = taskPath.LastIndexOf('\\');
                 string folderPath = lastSlash > 0 ? taskPath.Substring(0, lastSlash) : @"\";
@@ -204,7 +205,7 @@ namespace ModernTaskScheduler.Services
             return StaTask.Run(() =>
             {
                 using var ts = new TaskScheduler.TaskService();
-                if (!ts.Connected) throw new InvalidOperationException("Service de planification non connecté.");
+                if (!ts.Connected) throw new InvalidOperationException(LocalizationService.Instance.Translate("Service de planification non connecté."));
 
                 string normalizedParent = string.IsNullOrWhiteSpace(parentPath) ? @"\" : parentPath;
                 var parent = ts.GetFolder(normalizedParent) ?? ts.RootFolder;
@@ -217,11 +218,11 @@ namespace ModernTaskScheduler.Services
             return StaTask.Run(() =>
             {
                 using var ts = new TaskScheduler.TaskService();
-                if (!ts.Connected) throw new InvalidOperationException("Service de planification non connecté.");
+                if (!ts.Connected) throw new InvalidOperationException(LocalizationService.Instance.Translate("Service de planification non connecté."));
 
                 if (string.IsNullOrWhiteSpace(folderPath) || folderPath == @"\")
                 {
-                    throw new InvalidOperationException("Impossible de supprimer le dossier racine.");
+                    throw new InvalidOperationException(LocalizationService.Instance.Translate("Impossible de supprimer le dossier racine."));
                 }
 
                 int lastSlash = folderPath.LastIndexOf('\\');
@@ -238,7 +239,7 @@ namespace ModernTaskScheduler.Services
             return StaTask.Run(() =>
             {
                 using var ts = new TaskScheduler.TaskService();
-                if (!ts.Connected) throw new InvalidOperationException("Service de planification non connecté.");
+                if (!ts.Connected) throw new InvalidOperationException(LocalizationService.Instance.Translate("Service de planification non connecté."));
 
                 string folderPath = string.IsNullOrWhiteSpace(model.FolderPath) ? @"\" : model.FolderPath;
                 var folder = ts.GetFolder(folderPath);
@@ -260,7 +261,7 @@ namespace ModernTaskScheduler.Services
             return StaTask.Run(() =>
             {
                 using var ts = new TaskScheduler.TaskService();
-                if (!ts.Connected) throw new InvalidOperationException("Service de planification non connecté.");
+                if (!ts.Connected) throw new InvalidOperationException(LocalizationService.Instance.Translate("Service de planification non connecté."));
 
                 int lastSlash = originalPath.LastIndexOf('\\');
                 string folderPath = lastSlash > 0 ? originalPath.Substring(0, lastSlash) : @"\";

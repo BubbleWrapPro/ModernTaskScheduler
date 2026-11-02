@@ -4,6 +4,7 @@ using System.IO;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
+using ModernTaskScheduler.Localization;
 using ModernTaskScheduler.Models;
 using ModernTaskScheduler.ViewModels;
 using WinRT.Interop;
@@ -13,6 +14,7 @@ namespace ModernTaskScheduler.Views
     public sealed partial class TaskCreateEditWindow : Window
     {
         public TaskEditViewModel ViewModel { get; }
+        public LocalizationService Strings => LocalizationService.Instance;
         private readonly IntPtr _hwnd;
         public event EventHandler<TaskCreationModel>? TaskSaved;
 
@@ -20,6 +22,10 @@ namespace ModernTaskScheduler.Views
         {
             this.InitializeComponent();
             ViewModel = viewModel;
+            if (this.Content is FrameworkElement root)
+            {
+                root.DataContext = Strings;
+            }
             _hwnd = WindowNative.GetWindowHandle(this);
 
             ConfigureWindow();

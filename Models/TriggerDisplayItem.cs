@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using ModernTaskScheduler.Localization;
 
 namespace ModernTaskScheduler.Models
 {
@@ -7,6 +8,8 @@ namespace ModernTaskScheduler.Models
         [ObservableProperty]
         private string _triggerType = string.Empty;
 
+        public string TriggerTypeId { get; set; } = string.Empty;
+
         [ObservableProperty]
         private string _details = string.Empty;
 
@@ -14,7 +17,7 @@ namespace ModernTaskScheduler.Models
         private bool _enabled = true;
 
         [ObservableProperty]
-        private string _statusDisplay = "Activé";
+        private string _statusDisplay = "Enabled";
 
         [ObservableProperty]
         private string _startBoundary = string.Empty;
@@ -30,7 +33,7 @@ namespace ModernTaskScheduler.Models
 
         partial void OnEnabledChanged(bool value)
         {
-            StatusDisplay = value ? "Activé" : "Désactivé";
+            StatusDisplay = LocalizationService.Instance.Translate(value ? "Activé" : "Désactivé");
         }
     }
 }

@@ -7,8 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:ModernTaskScheduler.ViewModels"
     xmlns:models="using:ModernTaskScheduler.Models"
-    mc:Ignorable="d"
-    Title="Propriétés de la tâche">
+    mc:Ignorable="d">
 
     <Window.SystemBackdrop>
         <MicaBackdrop Kind="BaseAlt" />
@@ -36,7 +35,7 @@
                     <TextBlock Text="{x:Bind ViewModel.DialogTitle, Mode=OneWay}"
                                FontSize="18"
                                FontWeight="SemiBold"/>
-                    <TextBlock Text="Configuration avancée selon les spécifications Windows Task Scheduler (100% options)"
+                    <TextBlock Text="{x:Bind Strings.EditorSubtitle, Mode=OneWay}"
                                FontSize="12"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                 </StackPanel>
@@ -47,7 +46,7 @@
         <InfoBar Grid.Row="1"
                  Severity="Error"
                  IsOpen="{x:Bind ViewModel.HasError, Mode=OneWay}"
-                 Title="Erreur de validation"
+                 Title="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Erreur de validation'}"
                  Message="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}"
                  IsClosable="False"/>
 
@@ -58,7 +57,7 @@
                  Padding="20,10">
 
             <!-- ================= TAB 1: GÉNÉRAL ================= -->
-            <TabViewItem Header="Général" IsClosable="False">
+            <TabViewItem Header="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Général'}" IsClosable="False">
                 <TabViewItem.IconSource>
                     <FontIconSource Glyph="&#xE946;"/>
                 </TabViewItem.IconSource>
@@ -71,12 +70,12 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <TextBox Grid.Column="0"
-                                     Header="Nom de la tâche *"
-                                     PlaceholderText="Ex: NettoyageAutomatique"
+                                     Header="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Nom de la tâche *'}"
+                                     PlaceholderText="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Ex: NettoyageAutomatique'}"
                                      Text="{x:Bind ViewModel.TaskName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <StackPanel Grid.Column="1" Spacing="6">
-                                <TextBlock Text="Dossier d'enregistrement" FontSize="12" FontWeight="SemiBold"/>
+                                <TextBlock Text="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Dossier d'enregistrement&quot;}" FontSize="12" FontWeight="SemiBold"/>
                                 <ComboBox HorizontalAlignment="Stretch"
                                           ItemsSource="{x:Bind ViewModel.AvailableFolders, Mode=OneWay}"
                                           SelectedValuePath="Path"
@@ -91,8 +90,8 @@
                         </Grid>
 
                         <!-- Description -->
-                        <TextBox Header="Description de la tâche"
-                                 PlaceholderText="Décrivez l'objectif et les détails de cette tâche planifiée..."
+                        <TextBox Header="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Description de la tâche'}"
+                                 PlaceholderText="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Décrivez l'objectif et les détails de cette tâche planifiée...&quot;}"
                                  TextWrapping="Wrap"
                                  AcceptsReturn="True"
                                  Height="80"
@@ -105,11 +104,11 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <TextBox Grid.Column="0"
-                                     Header="Auteur"
+                                     Header="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Auteur'}"
                                      Text="{x:Bind ViewModel.Author, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBox Grid.Column="1"
-                                     Header="Compte utilisateur exécutant"
-                                     PlaceholderText="Ex: SYSTEM ou NomUtilisateur"
+                                     Header="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Compte utilisateur exécutant'}"
+                                     PlaceholderText="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Ex: SYSTEM ou NomUtilisateur'}"
                                      Text="{x:Bind ViewModel.UserAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         </Grid>
 
@@ -120,67 +119,67 @@
                                 CornerRadius="8"
                                 Padding="16">
                             <StackPanel Spacing="12">
-                                <TextBlock Text="Options de sécurité et droits d'exécution" FontWeight="SemiBold" FontSize="13"/>
+                                <TextBlock Text="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Options de sécurité et droits d'exécution&quot;}" FontWeight="SemiBold" FontSize="13"/>
 
-                                <CheckBox Content="Exécuter même si l'utilisateur n'est pas connecté"
+                                <CheckBox Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Exécuter même si l'utilisateur n'est pas connecté&quot;}"
                                           IsChecked="{x:Bind ViewModel.RunWhetherUserLoggedOn, Mode=TwoWay}"/>
 
-                                <CheckBox Content="Ne pas stocker le mot de passe (la tâche n'accédera qu'aux ressources locales - S4U)"
+                                <CheckBox Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Ne pas stocker le mot de passe (la tâche n'accédera qu'aux ressources locales - S4U)&quot;}"
                                           Margin="24,0,0,0"
                                           IsEnabled="{x:Bind ViewModel.RunWhetherUserLoggedOn, Mode=OneWay}"
                                           IsChecked="{x:Bind ViewModel.DoNotStorePassword, Mode=TwoWay}"/>
 
-                                <CheckBox Content="Exécuter avec les autorisations maximales (Élévation Administrateur)"
+                                <CheckBox Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Exécuter avec les autorisations maximales (Élévation Administrateur)&quot;}"
                                           IsChecked="{x:Bind ViewModel.IsHighestAvailable, Mode=TwoWay}"/>
 
-                                <CheckBox Content="Masquer la tâche (Invisible dans taskschd standard)"
+                                <CheckBox Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Masquer la tâche (Invisible dans taskschd standard)'}"
                                           IsChecked="{x:Bind ViewModel.Hidden, Mode=TwoWay}"/>
                             </StackPanel>
                         </Border>
 
                         <!-- Compatibility -->
-                        <ComboBox Header="Configurer pour :"
+                        <ComboBox Header="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Configurer pour :'}"
                                   HorizontalAlignment="Stretch"
                                   SelectedIndex="{x:Bind ViewModel.CompatibilityIndex, Mode=TwoWay}">
-                            <ComboBoxItem Content="Windows 10 / Windows 11 / Windows Server 2016 (V2.1)"/>
-                            <ComboBoxItem Content="Windows 7 / Windows Server 2008 R2 (V2.0)"/>
-                            <ComboBoxItem Content="Windows Vista / Windows Server 2008 (V1.0)"/>
+                            <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Windows 10 / Windows 11 / Windows Server 2016 (V2.1)'}"/>
+                            <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Windows 7 / Windows Server 2008 R2 (V2.0)'}"/>
+                            <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Windows Vista / Windows Server 2008 (V1.0)'}"/>
                         </ComboBox>
                     </StackPanel>
                 </ScrollViewer>
             </TabViewItem>
 
             <!-- ================= TAB 2: DÉCLENCHEURS ================= -->
-            <TabViewItem Header="Déclencheurs" IsClosable="False">
+            <TabViewItem Header="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Déclencheurs'}" IsClosable="False">
                 <TabViewItem.IconSource>
                     <FontIconSource Glyph="&#xE823;"/>
                 </TabViewItem.IconSource>
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12,16">
                     <StackPanel Spacing="16" MaxWidth="850">
-                        <ToggleSwitch Header="Activer ce déclencheur"
+                        <ToggleSwitch Header="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Activer ce déclencheur'}"
                                       IsOn="{x:Bind ViewModel.TriggerEnabled, Mode=TwoWay}"
-                                      OnContent="Activé"
-                                      OffContent="Désactivé"/>
+                                      OnContent="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Activé'}"
+                                      OffContent="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Désactivé'}"/>
 
                         <!-- Trigger Type -->
-                        <ComboBox Header="Lancer la tâche :"
+                        <ComboBox Header="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Lancer la tâche :'}"
                                   HorizontalAlignment="Stretch"
                                   SelectedIndex="{x:Bind ViewModel.TriggerTypeIndex, Mode=TwoWay}">
-                            <ComboBoxItem Content="Quotidien (Chaque jour)"/>
-                            <ComboBoxItem Content="Hebdomadaire (Chaque semaine)"/>
-                            <ComboBoxItem Content="Mensuel (Chaque mois)"/>
-                            <ComboBoxItem Content="À une heure programmée (Une seule fois)"/>
-                            <ComboBoxItem Content="À la connexion d'un utilisateur"/>
-                            <ComboBoxItem Content="Au démarrage de l'ordinateur"/>
-                            <ComboBoxItem Content="Sur inactivité de l'ordinateur"/>
-                            <ComboBoxItem Content="Au déverrouillage de la session"/>
+                            <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Quotidien (Chaque jour)'}"/>
+                            <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Hebdomadaire (Chaque semaine)'}"/>
+                            <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Mensuel (Chaque mois)'}"/>
+                            <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;À une heure programmée (Une seule fois)&quot;}"/>
+                            <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;À la connexion d'un utilisateur&quot;}"/>
+                            <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Au démarrage de l'ordinateur&quot;}"/>
+                            <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Sur inactivité de l'ordinateur&quot;}"/>
+                            <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Au déverrouillage de la session'}"/>
                         </ComboBox>
 
                         <!-- Start Date & Time -->
                         <StackPanel Orientation="Horizontal" Spacing="16">
-                            <DatePicker Header="Date de début"
+                            <DatePicker Header="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Date de début'}"
                                         Date="{x:Bind ViewModel.StartDate, Mode=TwoWay}"/>
-                            <TimePicker Header="Heure de début"
+                            <TimePicker Header="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Heure de début'}"
                                         Time="{x:Bind ViewModel.StartTime, Mode=TwoWay}"/>
                         </StackPanel>
 
@@ -191,7 +190,7 @@
                                 CornerRadius="8"
                                 Padding="16">
                             <StackPanel Spacing="14">
-                                <TextBlock Text="Paramètres avancés du déclencheur" FontWeight="SemiBold" FontSize="13"/>
+                                <TextBlock Text="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Paramètres avancés du déclencheur'}" FontWeight="SemiBold" FontSize="13"/>
 
                                 <!-- Delay -->
                                 <Grid ColumnSpacing="12">
@@ -199,16 +198,16 @@
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="Reporter la tâche jusqu'à :" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="0" Text="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Reporter la tâche jusqu'à :&quot;}" VerticalAlignment="Center"/>
                                     <ComboBox Grid.Column="1"
                                               SelectedIndex="{x:Bind ViewModel.DelayIndex, Mode=TwoWay}">
-                                        <ComboBoxItem Content="Aucun délai"/>
-                                        <ComboBoxItem Content="30 secondes"/>
-                                        <ComboBoxItem Content="1 minute"/>
-                                        <ComboBoxItem Content="5 minutes"/>
-                                        <ComboBoxItem Content="15 minutes"/>
-                                        <ComboBoxItem Content="30 minutes"/>
-                                        <ComboBoxItem Content="1 heure"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Aucun délai'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='30 secondes'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='1 minute'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='5 minutes'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='15 minutes'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='30 minutes'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='1 heure'}"/>
                                     </ComboBox>
                                 </Grid>
 
@@ -221,30 +220,30 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <TextBlock Grid.Column="0" Text="Répéter la tâche toutes les :" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="0" Text="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Répéter la tâche toutes les :'}" VerticalAlignment="Center"/>
                                     <ComboBox Grid.Column="1"
                                               SelectedIndex="{x:Bind ViewModel.RepeatIntervalIndex, Mode=TwoWay}">
-                                        <ComboBoxItem Content="Aucune répétition"/>
-                                        <ComboBoxItem Content="5 minutes"/>
-                                        <ComboBoxItem Content="10 minutes"/>
-                                        <ComboBoxItem Content="15 minutes"/>
-                                        <ComboBoxItem Content="30 minutes"/>
-                                        <ComboBoxItem Content="1 heure"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Aucune répétition'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='5 minutes'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='10 minutes'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='15 minutes'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='30 minutes'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='1 heure'}"/>
                                     </ComboBox>
 
-                                    <TextBlock Grid.Column="2" Text="pendant une durée de :" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="2" Text="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='pendant une durée de :'}" VerticalAlignment="Center"/>
                                     <ComboBox Grid.Column="3"
                                               SelectedIndex="{x:Bind ViewModel.RepeatDurationIndex, Mode=TwoWay}">
-                                        <ComboBoxItem Content="1 heure"/>
-                                        <ComboBoxItem Content="4 heures"/>
-                                        <ComboBoxItem Content="12 heures"/>
-                                        <ComboBoxItem Content="1 jour"/>
-                                        <ComboBoxItem Content="3 jours"/>
-                                        <ComboBoxItem Content="Indéfiniment"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='1 heure'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='4 heures'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='12 heures'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='1 jour'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='3 jours'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Indéfiniment'}"/>
                                     </ComboBox>
                                 </Grid>
 
-                                <CheckBox Content="Arrêter toutes les tâches en cours à la fin de la durée de répétition"
+                                <CheckBox Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Arrêter toutes les tâches en cours à la fin de la durée de répétition&quot;}"
                                           IsChecked="{x:Bind ViewModel.StopAtDurationEnd, Mode=TwoWay}"/>
 
                                 <!-- Trigger Execution Limit -->
@@ -253,28 +252,28 @@
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="Arrêter la tâche si elle s'exécute plus de :" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="0" Text="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Arrêter la tâche si elle s'exécute plus de :&quot;}" VerticalAlignment="Center"/>
                                     <ComboBox Grid.Column="1"
                                               SelectedIndex="{x:Bind ViewModel.ExecutionLimitIndex, Mode=TwoWay}">
-                                        <ComboBoxItem Content="Pas de limite spécifique au déclencheur"/>
-                                        <ComboBoxItem Content="1 heure"/>
-                                        <ComboBoxItem Content="2 heures"/>
-                                        <ComboBoxItem Content="4 heures"/>
-                                        <ComboBoxItem Content="8 heures"/>
-                                        <ComboBoxItem Content="1 jour"/>
-                                        <ComboBoxItem Content="3 jours"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Pas de limite spécifique au déclencheur'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='1 heure'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='2 heures'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='4 heures'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='8 heures'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='1 jour'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='3 jours'}"/>
                                     </ComboBox>
                                 </Grid>
 
                                 <!-- Expiration Date -->
                                 <StackPanel Spacing="8">
-                                    <CheckBox Content="Date d'expiration de la planification"
+                                    <CheckBox Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Date d'expiration de la planification&quot;}"
                                               IsChecked="{x:Bind ViewModel.HasEndDate, Mode=TwoWay}"/>
                                     <StackPanel Orientation="Horizontal" Spacing="16" Margin="24,0,0,0">
-                                        <DatePicker Header="Date de fin"
+                                        <DatePicker Header="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Date de fin'}"
                                                     IsEnabled="{x:Bind ViewModel.HasEndDate, Mode=OneWay}"
                                                     Date="{x:Bind ViewModel.EndDate, Mode=TwoWay}"/>
-                                        <TimePicker Header="Heure de fin"
+                                        <TimePicker Header="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Heure de fin'}"
                                                     IsEnabled="{x:Bind ViewModel.HasEndDate, Mode=OneWay}"
                                                     Time="{x:Bind ViewModel.EndTime, Mode=TwoWay}"/>
                                     </StackPanel>
@@ -286,13 +285,13 @@
             </TabViewItem>
 
             <!-- ================= TAB 3: ACTIONS ================= -->
-            <TabViewItem Header="Actions" IsClosable="False">
+            <TabViewItem Header="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Actions'}" IsClosable="False">
                 <TabViewItem.IconSource>
                     <FontIconSource Glyph="&#xE756;"/>
                 </TabViewItem.IconSource>
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12,16">
                     <StackPanel Spacing="16" MaxWidth="850">
-                        <TextBlock Text="Action : Démarrer un programme" FontWeight="SemiBold" FontSize="14"/>
+                        <TextBlock Text="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Action : Démarrer un programme'}" FontWeight="SemiBold" FontSize="14"/>
 
                         <!-- File Picker Grid -->
                         <Grid ColumnSpacing="8">
@@ -301,33 +300,33 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <TextBox Grid.Column="0"
-                                     Header="Programme / Script *"
-                                     PlaceholderText="Ex: C:\Windows\System32\cmd.exe ou C:\Scripts\backup.bat"
+                                     Header="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Programme / Script *'}"
+                                     PlaceholderText="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Ex: C:\Windows\System32\cmd.exe ou C:\Scripts\backup.bat'}"
                                      Text="{x:Bind ViewModel.ActionProgram, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <Button Grid.Column="1"
                                     VerticalAlignment="Bottom"
                                     Click="BrowseFileButton_Click"
-                                    ToolTipService.ToolTip="Parcourir l'ordinateur...">
+                                    ToolTipService.ToolTip="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Parcourir l'ordinateur...&quot;}">
                                 <StackPanel Orientation="Horizontal" Spacing="6">
                                     <FontIcon Glyph="&#xE838;"/>
-                                    <TextBlock Text="Parcourir..."/>
+                                    <TextBlock Text="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Parcourir...'}"/>
                                 </StackPanel>
                             </Button>
                         </Grid>
 
-                        <TextBox Header="Arguments facultatifs (paramètres de la commande)"
-                                 PlaceholderText="Ex: /c start script.bat ou -ExecutionPolicy Bypass -File C:\script.ps1"
+                        <TextBox Header="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Arguments facultatifs (paramètres de la commande)'}"
+                                 PlaceholderText="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Ex: /c start script.bat ou -ExecutionPolicy Bypass -File C:\script.ps1'}"
                                  Text="{x:Bind ViewModel.ActionArguments, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                        <TextBox Header="Dossier de démarrage (facultatif)"
-                                 PlaceholderText="Ex: C:\Scripts"
+                        <TextBox Header="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Dossier de démarrage (facultatif)'}"
+                                 PlaceholderText="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Ex: C:\Scripts'}"
                                  Text="{x:Bind ViewModel.ActionWorkingDirectory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                 </ScrollViewer>
             </TabViewItem>
 
             <!-- ================= TAB 4: CONDITIONS & PARAMÈTRES ================= -->
-            <TabViewItem Header="Conditions &amp; Paramètres" IsClosable="False">
+            <TabViewItem Header="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Conditions &amp; Paramètres&quot;}" IsClosable="False">
                 <TabViewItem.IconSource>
                     <FontIconSource Glyph="&#xE713;"/>
                 </TabViewItem.IconSource>
@@ -341,16 +340,16 @@
                                 CornerRadius="8"
                                 Padding="16">
                             <StackPanel Spacing="12">
-                                <TextBlock Text="Conditions d'inactivité de l'ordinateur" FontWeight="SemiBold" FontSize="13"/>
+                                <TextBlock Text="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Conditions d'inactivité de l'ordinateur&quot;}" FontWeight="SemiBold" FontSize="13"/>
 
-                                <CheckBox Content="Démarrer la tâche seulement si l'ordinateur est inactif pendant 10 minutes"
+                                <CheckBox Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Démarrer la tâche seulement si l'ordinateur est inactif pendant 10 minutes&quot;}"
                                           IsChecked="{x:Bind ViewModel.RunOnlyIfIdle, Mode=TwoWay}"/>
 
                                 <StackPanel Spacing="8" Margin="24,0,0,0">
-                                    <CheckBox Content="Arrêter la tâche si l'ordinateur quitte l'état inactif"
+                                    <CheckBox Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Arrêter la tâche si l'ordinateur quitte l'état inactif&quot;}"
                                               IsEnabled="{x:Bind ViewModel.RunOnlyIfIdle, Mode=OneWay}"
                                               IsChecked="{x:Bind ViewModel.StopOnIdleEnd, Mode=TwoWay}"/>
-                                    <CheckBox Content="Redémarrer la tâche si l'état inactif reprend"
+                                    <CheckBox Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Redémarrer la tâche si l'état inactif reprend&quot;}"
                                               IsEnabled="{x:Bind ViewModel.RunOnlyIfIdle, Mode=OneWay}"
                                               IsChecked="{x:Bind ViewModel.RestartOnIdle, Mode=TwoWay}"/>
                                 </StackPanel>
@@ -364,15 +363,15 @@
                                 CornerRadius="8"
                                 Padding="16">
                             <StackPanel Spacing="12">
-                                <TextBlock Text="Gestion de l'alimentation" FontWeight="SemiBold" FontSize="13"/>
+                                <TextBlock Text="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Gestion de l'alimentation&quot;}" FontWeight="SemiBold" FontSize="13"/>
 
-                                <CheckBox Content="Ne démarrer la tâche que si l'ordinateur est sur secteur"
+                                <CheckBox Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Ne démarrer la tâche que si l'ordinateur est sur secteur&quot;}"
                                           IsChecked="{x:Bind ViewModel.DisallowStartIfOnBatteries, Mode=TwoWay}"/>
 
-                                <CheckBox Content="Arrêter si l'ordinateur bascule sur batterie"
+                                <CheckBox Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Arrêter si l'ordinateur bascule sur batterie&quot;}"
                                           IsChecked="{x:Bind ViewModel.StopIfGoingOnBatteries, Mode=TwoWay}"/>
 
-                                <CheckBox Content="Sortir l'ordinateur du mode veille pour exécuter la tâche"
+                                <CheckBox Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Sortir l'ordinateur du mode veille pour exécuter la tâche&quot;}"
                                           IsChecked="{x:Bind ViewModel.WakeToRun, Mode=TwoWay}"/>
                             </StackPanel>
                         </Border>
@@ -384,8 +383,8 @@
                                 CornerRadius="8"
                                 Padding="16">
                             <StackPanel Spacing="12">
-                                <TextBlock Text="Conditions réseau" FontWeight="SemiBold" FontSize="13"/>
-                                <CheckBox Content="Démarrer seulement si une connexion réseau est disponible"
+                                <TextBlock Text="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Conditions réseau'}" FontWeight="SemiBold" FontSize="13"/>
+                                <CheckBox Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Démarrer seulement si une connexion réseau est disponible'}"
                                           IsChecked="{x:Bind ViewModel.RunOnlyIfNetworkAvailable, Mode=TwoWay}"/>
                             </StackPanel>
                         </Border>
@@ -397,17 +396,17 @@
                                 CornerRadius="8"
                                 Padding="16">
                             <StackPanel Spacing="12">
-                                <TextBlock Text="Paramètres avancés d'exécution de la tâche" FontWeight="SemiBold" FontSize="13"/>
+                                <TextBlock Text="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Paramètres avancés d'exécution de la tâche&quot;}" FontWeight="SemiBold" FontSize="13"/>
 
-                                <CheckBox Content="Autoriser l'exécution de la tâche à la demande"
+                                <CheckBox Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Autoriser l'exécution de la tâche à la demande&quot;}"
                                           IsChecked="{x:Bind ViewModel.AllowDemandStart, Mode=TwoWay}"/>
 
-                                <CheckBox Content="Exécuter la tâche dès que possible après un démarrage manqué"
+                                <CheckBox Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Exécuter la tâche dès que possible après un démarrage manqué&quot;}"
                                           IsChecked="{x:Bind ViewModel.StartWhenAvailable, Mode=TwoWay}"/>
 
                                 <!-- Restart on failure -->
                                 <StackPanel Spacing="6">
-                                    <CheckBox Content="Si la tâche échoue, la redémarrer toutes les minutes (jusqu'à 3 tentatives)"
+                                    <CheckBox Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Si la tâche échoue, la redémarrer toutes les minutes (jusqu'à 3 tentatives)&quot;}"
                                               IsChecked="{x:Bind ViewModel.RestartOnFailure, Mode=TwoWay}"/>
                                 </StackPanel>
 
@@ -417,20 +416,20 @@
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="Arrêter la tâche si elle s'exécute plus de :" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="0" Text="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Arrêter la tâche si elle s'exécute plus de :&quot;}" VerticalAlignment="Center"/>
                                     <ComboBox Grid.Column="1"
                                               SelectedIndex="{x:Bind ViewModel.ExecutionTimeLimitHoursIndex, Mode=TwoWay}">
-                                        <ComboBoxItem Content="Pas de limite (indéfini)"/>
-                                        <ComboBoxItem Content="1 heure"/>
-                                        <ComboBoxItem Content="2 heures"/>
-                                        <ComboBoxItem Content="4 heures"/>
-                                        <ComboBoxItem Content="8 heures"/>
-                                        <ComboBoxItem Content="1 jour (24h)"/>
-                                        <ComboBoxItem Content="3 jours (72h - recommandé)"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Pas de limite (indéfini)'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='1 heure'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='2 heures'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='4 heures'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='8 heures'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='1 jour (24h)'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='3 jours (72h - recommandé)'}"/>
                                     </ComboBox>
                                 </Grid>
 
-                                <CheckBox Content="Forcer l'arrêt de la tâche si elle ne s'arrête pas sur demande"
+                                <CheckBox Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Forcer l'arrêt de la tâche si elle ne s'arrête pas sur demande&quot;}"
                                           IsChecked="{x:Bind ViewModel.AllowHardTerminate, Mode=TwoWay}"/>
 
                                 <!-- Delete expired -->
@@ -439,26 +438,26 @@
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="Supprimer la tâche si non planifiée après :" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="0" Text="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Supprimer la tâche si non planifiée après :'}" VerticalAlignment="Center"/>
                                     <ComboBox Grid.Column="1"
                                               SelectedIndex="{x:Bind ViewModel.DeleteExpiredIndex, Mode=TwoWay}">
-                                        <ComboBoxItem Content="Ne jamais supprimer"/>
-                                        <ComboBoxItem Content="Immédiatement après expiration"/>
-                                        <ComboBoxItem Content="Après 30 jours"/>
-                                        <ComboBoxItem Content="Après 90 jours"/>
-                                        <ComboBoxItem Content="Après 180 jours"/>
-                                        <ComboBoxItem Content="Après 365 jours"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Ne jamais supprimer'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Immédiatement après expiration'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Après 30 jours'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Après 90 jours'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Après 180 jours'}"/>
+                                        <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Après 365 jours'}"/>
                                     </ComboBox>
                                 </Grid>
 
                                 <!-- Multiple instances policy -->
-                                <ComboBox Header="Si la tâche est déjà en cours d'exécution, la règle suivante s'applique :"
+                                <ComboBox Header="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Si la tâche est déjà en cours d'exécution, la règle suivante s'applique :&quot;}"
                                           HorizontalAlignment="Stretch"
                                           SelectedIndex="{x:Bind ViewModel.MultipleInstancesIndex, Mode=TwoWay}">
-                                    <ComboBoxItem Content="Ne pas démarrer de nouvelle instance (Ignorer)"/>
-                                    <ComboBoxItem Content="Exécuter des instances en parallèle"/>
-                                    <ComboBoxItem Content="Mettre la nouvelle instance en file d'attente"/>
-                                    <ComboBoxItem Content="Arrêter l'instance existante"/>
+                                    <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Ne pas démarrer de nouvelle instance (Ignorer)'}"/>
+                                    <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Exécuter des instances en parallèle'}"/>
+                                    <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Mettre la nouvelle instance en file d'attente&quot;}"/>
+                                    <ComboBoxItem Content="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Arrêter l'instance existante&quot;}"/>
                                 </ComboBox>
                             </StackPanel>
                         </Border>
@@ -482,10 +481,10 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10">
-                    <Button Content="Annuler"
+                    <Button Content="{x:Bind Strings.Cancel, Mode=OneWay}"
                             Click="CancelButton_Click"
                             Width="110"/>
-                    <Button Content="Enregistrer la tâche"
+                    <Button Content="{x:Bind Strings.SaveTask, Mode=OneWay}"
                             Style="{ThemeResource AccentButtonStyle}"
                             Click="SaveButton_Click"
                             Width="160"/>

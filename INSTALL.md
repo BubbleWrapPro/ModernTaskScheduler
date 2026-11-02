@@ -1,6 +1,6 @@
 # Modern Task Scheduler - Installation Guide
 
-## Version 1.0.0 - Professional Release
+## Version 1.1.0 - English/French Localization Release
 
 Welcome to Modern Task Scheduler! This guide will help you install and run the application.
 
@@ -162,7 +162,7 @@ The application directly accesses Windows Task Scheduler through COM interop:
 
 ### Checking for Updates
 1. Click the **"About"** button in the application
-2. Check the version number (currently v1.0.0)
+2. Check the version number (currently v1.1.0)
 3. Visit [GitHub Releases](https://github.com/BubbleWrapPro/ModernTaskScheduler/releases) for updates
 
 ### Updating
@@ -241,7 +241,7 @@ When reporting issues, please include:
 
 ---
 
-**Version**: 1.0.0  
-**Last Updated**: January 2024  
-**Status**: ✅ Production Ready  
+**Version**: 1.1.0
+**Last Updated**: November 2026
+**Status**: ✅ Production Ready
 **Support**: https://github.com/BubbleWrapPro/ModernTaskScheduler

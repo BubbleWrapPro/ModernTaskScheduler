@@ -17,6 +17,7 @@
             <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
             <converters:NullToVisibilityConverter x:Key="InverseNullToVisibilityConverter" Invert="True" />
             <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
+            <converters:LocalizationConverter x:Key="LocalizationConverter" />
 
             <!-- Application Color Theme -->
             <Color x:Key="PrimaryColor">#2E5090</Color>

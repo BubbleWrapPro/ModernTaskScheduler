@@ -1,0 +1,45 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Publish architecture builds
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $version = $env:GITHUB_REF_NAME.TrimStart('v')
+          $architectures = @(
+            @{ Rid = 'win-x86'; Platform = 'x86' },
+            @{ Rid = 'win-x64'; Platform = 'x64' },
+            @{ Rid = 'win-arm64'; Platform = 'ARM64' }
+          )
+
+          foreach ($architecture in $architectures) {
+            $publishDir = "artifacts\$($architecture.Rid)\"
+            dotnet publish ModernTaskScheduler.csproj --configuration Release --runtime $architecture.Rid --self-contained true "-p:Platform=$($architecture.Platform)" "-p:PublishDir=$publishDir"
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+            Compress-Archive -Path "$publishDir*" -DestinationPath "artifacts\ModernTaskScheduler-v$version-$($architecture.Rid).zip" -Force
+          }
+      - name: Create GitHub release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          $assets = @(Get-ChildItem artifacts -Filter '*.zip' | ForEach-Object { $_.FullName })
+          if ($assets.Count -ne 3) { throw "Expected 3 architecture archives; found $($assets.Count)." }
+          $notes = "Modern Task Scheduler $env:RELEASE_TAG adds an English/French language selector with a saved preference and localized task management screens, dialogs, notifications, and task details. Task editing uses language-independent values.`n`nDownloads are provided for Windows x86, x64, and ARM64."
+          gh release create $env:RELEASE_TAG @assets --title "Modern Task Scheduler $env:RELEASE_TAG" --notes $notes

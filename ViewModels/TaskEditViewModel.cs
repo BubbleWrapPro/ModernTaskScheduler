@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Win32.TaskScheduler;
+using ModernTaskScheduler.Localization;
 using ModernTaskScheduler.Models;
 
 namespace ModernTaskScheduler.ViewModels
@@ -16,11 +17,11 @@ namespace ModernTaskScheduler.ViewModels
         private string _originalPath = string.Empty;
 
         [ObservableProperty]
-        private string _dialogTitle = "Créer une nouvelle tâche planifiée";
+        private string _dialogTitle = string.Empty;
 
         // General
         [ObservableProperty]
-        private string _taskName = "NouvelleTache";
+        private string _taskName = string.Empty;
 
         [ObservableProperty]
         private string _folderPath = @"\";
@@ -166,7 +167,8 @@ namespace ModernTaskScheduler.ViewModels
 
         public TaskEditViewModel()
         {
-            DialogTitle = "Créer une nouvelle tâche planifiée";
+            TaskName = LocalizationService.Instance.Translate("NouvelleTache");
+            DialogTitle = LocalizationService.Instance.Translate("Créer une nouvelle tâche planifiée");
             IsEditMode = false;
         }
 
@@ -174,14 +176,14 @@ namespace ModernTaskScheduler.ViewModels
         {
             IsEditMode = true;
             OriginalPath = task.Path;
-            DialogTitle = $"Modifier la tâche : {task.Name}";
+            DialogTitle = LocalizationService.Instance.Format("Modifier la tâche : {0}", "Edit task: {0}", task.Name);
 
             TaskName = task.Name;
             FolderPath = task.FolderPath;
             Description = task.Description;
             Author = task.Author;
             UserAccount = task.PrincipalUser;
-            IsHighestAvailable = task.RunLevelDisplay.Contains("Administrateur");
+            IsHighestAvailable = task.IsHighestAvailable;
 
             if (task.Actions.Count > 0)
             {
@@ -195,14 +197,17 @@ namespace ModernTaskScheduler.ViewModels
             {
                 var trig = task.Triggers[0];
                 TriggerEnabled = trig.Enabled;
-                if (trig.TriggerType.Contains("Quotidien")) TriggerTypeIndex = 0;
-                else if (trig.TriggerType.Contains("Hebdo")) TriggerTypeIndex = 1;
-                else if (trig.TriggerType.Contains("Mensuel")) TriggerTypeIndex = 2;
-                else if (trig.TriggerType.Contains("Connexion")) TriggerTypeIndex = 4;
-                else if (trig.TriggerType.Contains("Démarrage")) TriggerTypeIndex = 5;
-                else if (trig.TriggerType.Contains("inactivité")) TriggerTypeIndex = 6;
-                else if (trig.TriggerType.Contains("session") || trig.TriggerType.Contains("verrouillage")) TriggerTypeIndex = 7;
-                else TriggerTypeIndex = 3; // Once
+                TriggerTypeIndex = trig.TriggerTypeId switch
+                {
+                    "Daily" => 0,
+                    "Weekly" => 1,
+                    "Monthly" or "MonthlyDOW" => 2,
+                    "Logon" => 4,
+                    "Boot" => 5,
+                    "Idle" => 6,
+                    "SessionStateChange" => 7,
+                    _ => 3
+                };
             }
         }
 
@@ -210,14 +215,14 @@ namespace ModernTaskScheduler.ViewModels
         {
             if (string.IsNullOrWhiteSpace(TaskName))
             {
-                ErrorMessage = "Le nom de la tâche ne peut pas être vide.";
+                ErrorMessage = LocalizationService.Instance.Translate("Le nom de la tâche ne peut pas être vide.");
                 HasError = true;
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(ActionProgram))
             {
-                ErrorMessage = "Le chemin du programme ou script à exécuter est obligatoire.";
+                ErrorMessage = LocalizationService.Instance.Translate("Le chemin du programme ou script à exécuter est obligatoire.");
                 HasError = true;
                 return false;
             }

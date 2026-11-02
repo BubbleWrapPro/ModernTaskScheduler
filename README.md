@@ -1,6 +1,6 @@
 # Modern Task Scheduler
 
-**Version: 1.0.0** | **Status: Stable & Production-Ready**
+**Version: 1.1.0** | **Status: Stable & Production-Ready**
 
 A modern, feature-rich Windows application for managing system tasks with an intuitive graphical interface built with WinUI and .NET 8. Professional-grade task scheduling management with a clean, modern UI.
 
@@ -13,6 +13,7 @@ A modern, feature-rich Windows application for managing system tasks with an int
 - **Task Control**: Run, stop, enable/disable tasks directly from the application
 - **Task Export**: Export task configurations to XML for backup and portability
 - **Real-time Monitoring**: Real-time task status updates and activity monitoring
+- **Language Selection**: Switch between English and French; the preference is saved locally
 - **Professional UI**: Modern Fluent Design with responsive layout
 - **Multi-platform Support**: Build for x86, x64, and ARM64 architectures
 
@@ -23,7 +24,7 @@ A modern, feature-rich Windows application for managing system tasks with an int
 - **Architecture**: MVVM (Model-View-ViewModel) Pattern
 - **Toolkit**: MVVM Community Toolkit 8.4.2
 - **Task Integration**: Windows Task Scheduler COM Interop
-- **Localization**: English UI with professional styling
+- **Localization**: English and French UI with a persisted language preference
 
 ## Project Structure
 
@@ -48,6 +49,8 @@ ModernTaskScheduler/
 │   ├── ActionDisplayItem.cs
 │   ├── ConditionDisplayItem.cs
 │   └── SettingDisplayItem.cs
+├── Localization/          # English/French translations and saved language preference
+│   └── LocalizationService.cs
 ├── Converters/            # XAML value converters
 │   └── Converters.cs
 ├── Assets/                # Application icons and images
@@ -143,7 +146,7 @@ The application will request elevation when needed.
 
 - **Company**: BubbleWrapPro
 - **Product Name**: Modern Task Scheduler
-- **Version**: 1.0.0
+- **Version**: 1.1.0
 - **Brand Color**: #2E5090 (Primary), #0078D4 (Accent)
 - **Design Language**: Microsoft Fluent Design System
 
@@ -196,6 +199,10 @@ For issues, feature requests, or questions:
 
 ## Project Status
 
+- **v1.1.0** - English/French localization release
+  - English and French language selector with locally persisted preference
+  - Localized task management screens, dialogs, notifications, and task details
+  - Stable language-independent task editing
 - **v1.0.0** - Initial stable release
   - Core task management features
   - Professional UI with Fluent Design

@@ -9,7 +9,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Title="Modern Task Scheduler v1.0.0">
+    Title="{x:Bind Strings.WindowTitle, Mode=OneWay}">
 
     <Window.SystemBackdrop>
         <MicaBackdrop Kind="BaseAlt" />
@@ -40,7 +40,7 @@
                     <FontIcon Glyph="&#xE823;" FontSize="22" Foreground="{ThemeResource AccentFillColorDefaultBrush}"/>
                     <StackPanel>
                         <TextBlock Text="Modern Task Scheduler" FontSize="16" FontWeight="SemiBold"/>
-                        <TextBlock Text="v1.0.0 - Professional Task Management" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Text="{x:Bind Strings.Subtitle, Mode=OneWay}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     </StackPanel>
                 </StackPanel>
 
@@ -48,31 +48,35 @@
                 <AutoSuggestBox Grid.Column="1"
                                 MaxWidth="420"
                                 HorizontalAlignment="Center"
-                                PlaceholderText="Rechercher une tâche (nom, description, auteur)..."
+                                PlaceholderText="{x:Bind Strings.SearchPlaceholder, Mode=OneWay}"
                                 QueryIcon="Find"
                                 Text="{x:Bind ViewModel.SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <!-- Top Right Quick Actions -->
                 <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                    <ComboBox x:Name="LanguageSelector" Width="112" SelectedValuePath="Tag" SelectionChanged="LanguageSelector_SelectionChanged">
+                        <ComboBoxItem Content="Français" Tag="fr"/>
+                        <ComboBoxItem Content="English" Tag="en"/>
+                    </ComboBox>
                     <Button Command="{x:Bind ViewModel.RefreshCommand}"
-                            ToolTipService.ToolTip="Refresh folders and tasks">
+                            ToolTipService.ToolTip="{x:Bind Strings.RefreshText, Mode=OneWay}">
                         <StackPanel Orientation="Horizontal" Spacing="6">
                             <FontIcon Glyph="&#xE72C;" FontSize="14"/>
-                            <TextBlock Text="Refresh"/>
+                            <TextBlock Text="{x:Bind Strings.RefreshText, Mode=OneWay}"/>
                         </StackPanel>
                     </Button>
 
                     <Button Style="{ThemeResource AccentButtonStyle}"
                             Command="{x:Bind ViewModel.CreateTaskCommand}"
-                            ToolTipService.ToolTip="Create a new scheduled task">
+                            ToolTipService.ToolTip="{x:Bind Strings.NewTaskText, Mode=OneWay}">
                         <StackPanel Orientation="Horizontal" Spacing="6">
                             <FontIcon Glyph="&#xE710;" FontSize="14"/>
-                            <TextBlock Text="New Task"/>
+                            <TextBlock Text="{x:Bind Strings.NewTaskText, Mode=OneWay}"/>
                         </StackPanel>
                     </Button>
 
                     <Button Click="AboutButton_Click"
-                            ToolTipService.ToolTip="About this application">
+                            ToolTipService.ToolTip="{x:Bind Strings.AboutTooltip, Mode=OneWay}">
                         <FontIcon Glyph="&#xE946;" FontSize="14"/>
                     </Button>
                 </StackPanel>
@@ -117,7 +121,7 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0"
-                                   Text="DOSSIERS DE LA BIBLIOTHÈQUE"
+                                   Text="{x:Bind Strings.FolderHeader, Mode=OneWay}"
                                    FontSize="11"
                                    FontWeight="SemiBold"
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
@@ -125,16 +129,16 @@
                         <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4">
                             <Button Style="{ThemeResource DefaultButtonStyle}"
                                     Padding="6,3"
-                                    ToolTipService.ToolTip="Créer un nouveau sous-dossier"
+                                    ToolTipService.ToolTip="{x:Bind Strings.CreateFolderTooltip, Mode=OneWay}"
                                     Command="{x:Bind ViewModel.CreateFolderCommand}">
                                 <StackPanel Orientation="Horizontal" Spacing="4">
                                     <FontIcon Glyph="&#xE8F4;" FontSize="11"/>
-                                    <TextBlock Text="Nouveau" FontSize="11"/>
+                                    <TextBlock Text="{x:Bind Strings.NewText, Mode=OneWay}" FontSize="11"/>
                                 </StackPanel>
                             </Button>
                             <Button Style="{ThemeResource DefaultButtonStyle}"
                                     Padding="6,3"
-                                    ToolTipService.ToolTip="Supprimer ce dossier"
+                                    ToolTipService.ToolTip="{x:Bind Strings.DeleteFolderTooltip, Mode=OneWay}"
                                     Command="{x:Bind ViewModel.DeleteFolderCommand}"
                                     IsEnabled="{x:Bind ViewModel.CanDeleteSelectedFolder, Mode=OneWay}">
                                 <FontIcon Glyph="&#xE74D;" FontSize="11"/>
@@ -160,24 +164,24 @@
                               VerticalScrollBarVisibility="Disabled"
                               Padding="14,4,14,8">
                     <StackPanel Orientation="Horizontal" Spacing="6">
-                        <Button Content="Toutes"
+                        <Button Content="{x:Bind Strings.FilterAll, Mode=OneWay}"
                                 Click="FilterAll_Click"
                                 Style="{ThemeResource DefaultButtonStyle}"/>
-                        <Button Content="En cours"
+                        <Button Content="{x:Bind Strings.FilterRunning, Mode=OneWay}"
                                 Click="FilterRunning_Click"
                                 Style="{ThemeResource DefaultButtonStyle}"/>
-                        <Button Content="Prêtes"
+                        <Button Content="{x:Bind Strings.FilterReady, Mode=OneWay}"
                                 Click="FilterReady_Click"
                                 Style="{ThemeResource DefaultButtonStyle}"/>
-                        <Button Content="Désactivées"
+                        <Button Content="{x:Bind Strings.FilterDisabled, Mode=OneWay}"
                                 Click="FilterDisabled_Click"
                                 Style="{ThemeResource DefaultButtonStyle}"/>
                         <Button Command="{x:Bind ViewModel.LoadAllTasksCommand}"
-                                ToolTipService.ToolTip="Afficher récursivement toutes les tâches de toutes les branches"
+                                ToolTipService.ToolTip="{x:Bind Strings.ExploreAllTooltip, Mode=OneWay}"
                                 Style="{ThemeResource DefaultButtonStyle}">
                             <StackPanel Orientation="Horizontal" Spacing="4">
                                 <FontIcon Glyph="&#xE8B9;" FontSize="12"/>
-                                <TextBlock Text="Tout explorer"/>
+                                <TextBlock Text="{x:Bind Strings.ExploreAll, Mode=OneWay}"/>
                             </StackPanel>
                         </Button>
                     </StackPanel>
@@ -267,7 +271,7 @@
                                    VerticalAlignment="Center"/>
                         <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
                             <TextBlock Text="{x:Bind ViewModel.TotalTasksCount, Mode=OneWay}" FontWeight="SemiBold" FontSize="11"/>
-                            <TextBlock Text="tâches" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            <TextBlock Text="{x:Bind Strings.TasksWord, Mode=OneWay}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                         </StackPanel>
                     </Grid>
                 </Border>
@@ -288,11 +292,11 @@
                     <Border Width="64" Height="64" CornerRadius="32" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" HorizontalAlignment="Center">
                         <FontIcon Glyph="&#xE823;" FontSize="32" Foreground="{ThemeResource AccentFillColorDefaultBrush}"/>
                     </Border>
-                    <TextBlock Text="Aucune tâche sélectionnée"
+                    <TextBlock Text="{x:Bind Strings.EmptyTitle, Mode=OneWay}"
                                FontSize="18"
                                FontWeight="SemiBold"
                                HorizontalAlignment="Center"/>
-                    <TextBlock Text="Sélectionnez une tâche dans la colonne de gauche pour afficher et gérer ses déclencheurs, actions, conditions et paramètres avancés, ou créez une nouvelle tâche dès maintenant."
+                    <TextBlock Text="{x:Bind Strings.EmptyDescription, Mode=OneWay}"
                                TextWrapping="Wrap"
                                TextAlignment="Center"
                                FontSize="13"
@@ -302,7 +306,7 @@
                             Command="{x:Bind ViewModel.CreateTaskCommand}">
                         <StackPanel Orientation="Horizontal" Spacing="6">
                             <FontIcon Glyph="&#xE710;"/>
-                            <TextBlock Text="Créer une nouvelle tâche"/>
+                            <TextBlock Text="{x:Bind Strings.CreateNewTask, Mode=OneWay}"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -383,44 +387,44 @@
                                         DefaultLabelPosition="Right"
                                         Background="Transparent">
                                 <AppBarButton Icon="Play"
-                                              Label="Exécuter"
-                                              ToolTipService.ToolTip="Exécuter immédiatement cette tâche"
+                                              Label="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Exécuter'}"
+                                              ToolTipService.ToolTip="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Exécuter immédiatement cette tâche'}"
                                               Command="{x:Bind ViewModel.RunSelectedTaskCommand}"
                                               IsEnabled="{x:Bind ViewModel.SelectedTask.CanRun, Mode=OneWay}"/>
 
                                 <AppBarButton Icon="Stop"
-                                              Label="Arrêter"
-                                              ToolTipService.ToolTip="Arrêter l'exécution de la tâche en cours"
+                                              Label="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Arrêter'}"
+                                              ToolTipService.ToolTip="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Arrêter l'exécution de la tâche en cours&quot;}"
                                               Command="{x:Bind ViewModel.StopSelectedTaskCommand}"
                                               IsEnabled="{x:Bind ViewModel.SelectedTask.CanStop, Mode=OneWay}"/>
 
                                 <AppBarSeparator/>
 
                                 <AppBarButton Icon="Sync"
-                                              Label="Activer / Désactiver"
-                                              ToolTipService.ToolTip="Activer ou désactiver cette tâche"
+                                              Label="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Activer / Désactiver'}"
+                                              ToolTipService.ToolTip="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Activer ou désactiver cette tâche'}"
                                               Click="ToggleEnabled_Click"/>
 
                                 <AppBarButton Icon="Edit"
-                                              Label="Modifier"
-                                              ToolTipService.ToolTip="Modifier les propriétés de la tâche"
+                                              Label="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Modifier'}"
+                                              ToolTipService.ToolTip="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Modifier les propriétés de la tâche'}"
                                               Command="{x:Bind ViewModel.EditSelectedTaskCommand}"/>
 
                                 <AppBarButton Icon="Delete"
-                                              Label="Supprimer"
-                                              ToolTipService.ToolTip="Supprimer définitivement cette tâche"
+                                              Label="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Supprimer'}"
+                                              ToolTipService.ToolTip="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Supprimer définitivement cette tâche'}"
                                               Command="{x:Bind ViewModel.DeleteSelectedTaskCommand}"/>
 
                                 <AppBarSeparator/>
 
                                 <AppBarButton Icon="SaveLocal"
-                                              Label="Exporter XML"
-                                              ToolTipService.ToolTip="Copier la définition XML de la tâche"
+                                              Label="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Exporter XML'}"
+                                              ToolTipService.ToolTip="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Copier la définition XML de la tâche'}"
                                               Command="{x:Bind ViewModel.ExportXmlCommand}"/>
 
                                 <AppBarButton Icon="Refresh"
-                                              Label="Actualiser"
-                                              ToolTipService.ToolTip="Recharger les propriétés de cette tâche"
+                                              Label="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Actualiser'}"
+                                              ToolTipService.ToolTip="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Recharger les propriétés de cette tâche'}"
                                               Command="{x:Bind ViewModel.RefreshCommand}"/>
                             </CommandBar>
                         </Grid>
@@ -433,7 +437,7 @@
                              Padding="16">
 
                         <!-- TAB 1: GÉNÉRAL -->
-                        <TabViewItem Header="Général" IsClosable="False">
+                        <TabViewItem Header="{x:Bind Strings.GeneralTab, Mode=OneWay}" IsClosable="False">
                             <TabViewItem.IconSource>
                                 <FontIconSource Glyph="&#xE946;"/>
                             </TabViewItem.IconSource>
@@ -447,7 +451,7 @@
                                             CornerRadius="8"
                                             Padding="16">
                                         <StackPanel Spacing="8">
-                                            <TextBlock Text="Description" FontWeight="SemiBold" FontSize="14"/>
+                                            <TextBlock Text="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Description'}" FontWeight="SemiBold" FontSize="14"/>
                                             <TextBlock Text="{x:Bind ViewModel.SelectedTask.Description, Mode=OneWay}"
                                                        TextWrapping="Wrap"
                                                        FontSize="13"
@@ -462,7 +466,7 @@
                                             CornerRadius="8"
                                             Padding="16">
                                         <StackPanel Spacing="12">
-                                            <TextBlock Text="État d'exécution &amp; Diagnostics" FontWeight="SemiBold" FontSize="14"/>
+                                            <TextBlock Text="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;État d'exécution &amp; Diagnostics&quot;}" FontWeight="SemiBold" FontSize="14"/>
                                             <Grid ColumnSpacing="20" RowSpacing="10">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*"/>
@@ -474,17 +478,17 @@
                                                 </Grid.RowDefinitions>
 
                                                 <StackPanel Grid.Column="0" Grid.Row="0" Spacing="2">
-                                                    <TextBlock Text="Dernière exécution" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                                    <TextBlock Text="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Dernière exécution'}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                                                     <TextBlock Text="{x:Bind ViewModel.SelectedTask.LastRunTimeDisplay, Mode=OneWay}" FontWeight="SemiBold"/>
                                                 </StackPanel>
 
                                                 <StackPanel Grid.Column="1" Grid.Row="0" Spacing="2">
-                                                    <TextBlock Text="Prochaine exécution planifiée" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                                    <TextBlock Text="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Prochaine exécution planifiée'}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                                                     <TextBlock Text="{x:Bind ViewModel.SelectedTask.NextRunTimeDisplay, Mode=OneWay}" FontWeight="SemiBold"/>
                                                 </StackPanel>
 
                                                 <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Spacing="2">
-                                                    <TextBlock Text="Résultat de la dernière exécution" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                                    <TextBlock Text="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Résultat de la dernière exécution'}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                                                     <TextBlock Text="{x:Bind ViewModel.SelectedTask.LastTaskResultDisplay, Mode=OneWay}" FontWeight="SemiBold" Foreground="{ThemeResource AccentFillColorDefaultBrush}"/>
                                                 </StackPanel>
                                             </Grid>
@@ -498,7 +502,7 @@
                                             CornerRadius="8"
                                             Padding="16">
                                         <StackPanel Spacing="12">
-                                            <TextBlock Text="Compte et privilèges de sécurité" FontWeight="SemiBold" FontSize="14"/>
+                                            <TextBlock Text="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Compte et privilèges de sécurité'}" FontWeight="SemiBold" FontSize="14"/>
                                             <Grid ColumnSpacing="20" RowSpacing="10">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*"/>
@@ -506,12 +510,12 @@
                                                 </Grid.ColumnDefinitions>
 
                                                 <StackPanel Grid.Column="0" Spacing="2">
-                                                    <TextBlock Text="Compte utilisateur" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                                    <TextBlock Text="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Compte utilisateur'}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                                                     <TextBlock Text="{x:Bind ViewModel.SelectedTask.PrincipalUser, Mode=OneWay}" FontWeight="SemiBold"/>
                                                 </StackPanel>
 
                                                 <StackPanel Grid.Column="1" Spacing="2">
-                                                    <TextBlock Text="Niveau d'élévation" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                                    <TextBlock Text="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter=&quot;Niveau d'élévation&quot;}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                                                     <TextBlock Text="{x:Bind ViewModel.SelectedTask.RunLevelDisplay, Mode=OneWay}" FontWeight="SemiBold"/>
                                                 </StackPanel>
                                             </Grid>
@@ -522,7 +526,7 @@
                         </TabViewItem>
 
                         <!-- TAB 2: DÉCLENCHEURS (TRIGGERS) -->
-                        <TabViewItem Header="Déclencheurs" IsClosable="False">
+                        <TabViewItem Header="{x:Bind Strings.TriggersTab, Mode=OneWay}" IsClosable="False">
                             <TabViewItem.IconSource>
                                 <FontIconSource Glyph="&#xE823;"/>
                             </TabViewItem.IconSource>
@@ -569,7 +573,7 @@
                         </TabViewItem>
 
                         <!-- TAB 3: ACTIONS -->
-                        <TabViewItem Header="Actions" IsClosable="False">
+                        <TabViewItem Header="{x:Bind Strings.ActionsTab, Mode=OneWay}" IsClosable="False">
                             <TabViewItem.IconSource>
                                 <FontIconSource Glyph="&#xE756;"/>
                             </TabViewItem.IconSource>
@@ -606,13 +610,13 @@
                                                                 <RowDefinition Height="Auto"/>
                                                             </Grid.RowDefinitions>
 
-                                                            <TextBlock Grid.Column="0" Grid.Row="0" Text="Programme / Script :" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                                            <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Programme / Script :'}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                                                             <TextBlock Grid.Column="1" Grid.Row="0" Text="{x:Bind Path}" FontSize="11" FontWeight="SemiBold" TextWrapping="Wrap"/>
 
-                                                            <TextBlock Grid.Column="0" Grid.Row="1" Text="Arguments :" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                                            <TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Arguments :'}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                                                             <TextBlock Grid.Column="1" Grid.Row="1" Text="{x:Bind Arguments}" FontSize="11" TextWrapping="Wrap"/>
 
-                                                            <TextBlock Grid.Column="0" Grid.Row="2" Text="Dossier de travail :" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                                            <TextBlock Grid.Column="0" Grid.Row="2" Text="{Binding Language, Converter={StaticResource LocalizationConverter}, ConverterParameter='Dossier de travail :'}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                                                             <TextBlock Grid.Column="1" Grid.Row="2" Text="{x:Bind WorkingDirectory}" FontSize="11"/>
                                                         </Grid>
                                                     </StackPanel>
@@ -625,7 +629,7 @@
                         </TabViewItem>
 
                         <!-- TAB 4: CONDITIONS -->
-                        <TabViewItem Header="Conditions" IsClosable="False">
+                        <TabViewItem Header="{x:Bind Strings.ConditionsTab, Mode=OneWay}" IsClosable="False">
                             <TabViewItem.IconSource>
                                 <FontIconSource Glyph="&#xE946;"/>
                             </TabViewItem.IconSource>
@@ -663,7 +667,7 @@
                         </TabViewItem>
 
                         <!-- TAB 5: PARAMÈTRES (SETTINGS) -->
-                        <TabViewItem Header="Paramètres" IsClosable="False">
+                        <TabViewItem Header="{x:Bind Strings.SettingsTab, Mode=OneWay}" IsClosable="False">
                             <TabViewItem.IconSource>
                                 <FontIconSource Glyph="&#xE713;"/>
                             </TabViewItem.IconSource>
@@ -701,7 +705,7 @@
                         </TabViewItem>
 
                         <!-- TAB 6: DÉFINITION XML -->
-                        <TabViewItem Header="Définition XML" IsClosable="False">
+                        <TabViewItem Header="{x:Bind Strings.XmlTab, Mode=OneWay}" IsClosable="False">
                             <TabViewItem.IconSource>
                                 <FontIconSource Glyph="&#xE943;"/>
                             </TabViewItem.IconSource>
@@ -715,7 +719,7 @@
                                         Command="{x:Bind ViewModel.CopySelectedXmlCommand}">
                                     <StackPanel Orientation="Horizontal" Spacing="6">
                                         <FontIcon Glyph="&#xE8C8;"/>
-                                        <TextBlock Text="Copier le XML dans le presse-papiers"/>
+                                        <TextBlock Text="{x:Bind Strings.CopyXml, Mode=OneWay}"/>
                                     </StackPanel>
                                 </Button>
 
