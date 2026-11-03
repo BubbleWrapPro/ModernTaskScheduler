@@ -1,6 +1,12 @@
 name: Release
 
 on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (for example, 1.2.0)'
+        required: true
+        type: string
   push:
     tags:
       - 'v*.*.*'
@@ -17,10 +23,22 @@ jobs:
         with:
           dotnet-version: 8.0.x
       - name: Publish architecture builds
+        id: publish
         shell: pwsh
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
         run: |
           $ErrorActionPreference = 'Stop'
-          $version = $env:GITHUB_REF_NAME.TrimStart('v')
+          if ($env:GITHUB_EVENT_NAME -eq 'workflow_dispatch') {
+            $version = $env:RELEASE_VERSION
+            if ($version -notmatch '^\d+\.\d+\.\d+$') { throw 'Enter a version in major.minor.patch format, for example 1.2.0.' }
+            $tag = "v$version"
+          } else {
+            $tag = $env:GITHUB_REF_NAME
+            if ($tag -notmatch '^v(\d+\.\d+\.\d+)$') { throw "Expected a version tag like v1.2.0; got $tag." }
+            $version = $Matches[1]
+          }
+          "tag=$tag" >> $env:GITHUB_OUTPUT
           $architectures = @(
             @{ Rid = 'win-x86'; Platform = 'x86' },
             @{ Rid = 'win-x64'; Platform = 'x64' },
@@ -29,7 +47,7 @@ jobs:
 
           foreach ($architecture in $architectures) {
             $publishDir = "artifacts\$($architecture.Rid)\"
-            dotnet publish ModernTaskScheduler.csproj --configuration Release --runtime $architecture.Rid --self-contained true "-p:Platform=$($architecture.Platform)" "-p:PublishDir=$publishDir"
+            dotnet publish ModernTaskScheduler.csproj --configuration Release --runtime $architecture.Rid --self-contained true "-p:Platform=$($architecture.Platform)" "-p:PublishDir=$publishDir" "-p:Version=$version" "-p:AssemblyVersion=$version.0" "-p:FileVersion=$version.0" "-p:InformationalVersion=$version"
             if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
             Compress-Archive -Path "$publishDir*" -DestinationPath "artifacts\ModernTaskScheduler-v$version-$($architecture.Rid).zip" -Force
           }
@@ -37,9 +55,9 @@ jobs:
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
-          RELEASE_TAG: ${{ github.ref_name }}
+          RELEASE_TAG: ${{ steps.publish.outputs.tag }}
         run: |
           $assets = @(Get-ChildItem artifacts -Filter '*.zip' | ForEach-Object { $_.FullName })
           if ($assets.Count -ne 3) { throw "Expected 3 architecture archives; found $($assets.Count)." }
           $notes = "Modern Task Scheduler $env:RELEASE_TAG adds an English/French language selector with a saved preference and localized task management screens, dialogs, notifications, and task details. Task editing uses language-independent values.`n`nDownloads are provided for Windows x86, x64, and ARM64."
-          gh release create $env:RELEASE_TAG @assets --title "Modern Task Scheduler $env:RELEASE_TAG" --notes $notes
+          gh release create $env:RELEASE_TAG @assets --title "Modern Task Scheduler $env:RELEASE_TAG" --notes $notes --target $env:GITHUB_SHA
