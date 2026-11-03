@@ -4,6 +4,7 @@ using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using ModernTaskScheduler.Localization;
 using ModernTaskScheduler.Models;
@@ -22,6 +23,7 @@ namespace ModernTaskScheduler
         public LocalizationService Strings => LocalizationService.Instance;
         private readonly ITaskSchedulerService _taskService;
         private readonly IntPtr _hwnd;
+        private uint? _leftPanelResizePointerId;
 
         public MainWindow()
         {
@@ -50,6 +52,58 @@ namespace ModernTaskScheduler
                     LanguageSelector.SelectedValue = Strings.Language;
                     await ViewModel.InitializeAsync();
                 };
+            }
+        }
+
+        private void LeftPanelResizeGrip_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            if (LeftPanelResizeGrip.CapturePointer(e.Pointer))
+            {
+                _leftPanelResizePointerId = e.Pointer.PointerId;
+                e.Handled = true;
+            }
+        }
+
+        private void LeftPanelResizeGrip_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            if (_leftPanelResizePointerId != e.Pointer.PointerId)
+            {
+                return;
+            }
+
+            double requestedWidth = e.GetCurrentPoint(MainContentGrid).Position.X;
+            double maximumWidth = Math.Max(280, Math.Min(600, MainContentGrid.ActualWidth - 360));
+            double width = Math.Clamp(requestedWidth, 280, maximumWidth);
+            MainContentGrid.ColumnDefinitions[0].Width = new GridLength(width);
+            e.Handled = true;
+        }
+
+        private void LeftPanelResizeGrip_PointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            if (_leftPanelResizePointerId != e.Pointer.PointerId)
+            {
+                return;
+            }
+
+            LeftPanelResizeGrip.ReleasePointerCapture(e.Pointer);
+            _leftPanelResizePointerId = null;
+            e.Handled = true;
+        }
+
+        private void LeftPanelResizeGrip_PointerCanceled(object sender, PointerRoutedEventArgs e)
+        {
+            if (_leftPanelResizePointerId == e.Pointer.PointerId)
+            {
+                LeftPanelResizeGrip.ReleasePointerCapture(e.Pointer);
+                _leftPanelResizePointerId = null;
+            }
+        }
+
+        private void LeftPanelResizeGrip_PointerCaptureLost(object sender, PointerRoutedEventArgs e)
+        {
+            if (_leftPanelResizePointerId == e.Pointer.PointerId)
+            {
+                _leftPanelResizePointerId = null;
             }
         }
 
